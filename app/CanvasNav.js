@@ -67,7 +67,7 @@ export default function CanvasNav({ projectId }) {
         <div className={styles.children}>
           {CATEGORIES.map(({ slug, label, Icon }) => {
             const href = `/canvas/${slug}`;
-            const active = pathname === href;
+            const active = pathname === href || pathname.startsWith(href + "/");
             return (
               <Link key={slug} href={href} className={styles.row} data-selected={active || undefined} aria-current={active ? "page" : undefined}>
                 <span className={styles.kind}>

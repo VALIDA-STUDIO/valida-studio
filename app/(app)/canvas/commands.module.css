@@ -1,0 +1,242 @@
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.head button {
+  gap: 6px;
+  margin-top: 4px;
+}
+
+/* ---------- inline create ---------- */
+
+.create {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 680px;
+  margin-bottom: 16px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+}
+
+.nameField {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  transition: border-color 0.12s;
+}
+
+.nameField:focus-within {
+  border-color: var(--fg);
+}
+
+.slash {
+  margin-right: 1px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.nameInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13.5px;
+  outline: none;
+}
+
+.nameInput::placeholder {
+  color: var(--border-strong);
+}
+
+.createError {
+  width: 100%;
+  margin: 2px 0 0 2px;
+}
+
+/* ---------- list ---------- */
+
+.list {
+  max-width: 680px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  overflow: hidden;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+  transition: opacity 0.12s;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.row[data-pending] {
+  opacity: 0.7;
+}
+
+.rowLink {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  height: 50px;
+  padding: 0 44px 0 16px;
+  color: var(--fg);
+  transition: background 0.12s;
+}
+
+.rowLink:hover {
+  background: var(--surface-hover);
+}
+
+.rowIcon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.rowLink:hover .rowIcon {
+  color: var(--fg);
+}
+
+.rowName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.rowChevron {
+  display: grid;
+  place-items: center;
+  color: var(--border-strong);
+  transition: color 0.12s, transform 0.12s;
+}
+
+.rowLink:hover .rowChevron {
+  color: var(--fg);
+  transform: translateX(2px);
+}
+
+/* trash sits over the row's right edge, shown on hover */
+.rowDelete {
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.12s, color 0.12s, background 0.12s;
+}
+
+.row:hover .rowDelete,
+.rowDelete:focus-visible {
+  opacity: 1;
+}
+
+.rowDelete:hover {
+  color: #ef4444;
+  background: var(--surface-hover);
+}
+
+.confirm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px 0 16px;
+}
+
+.confirmText {
+  flex: 1;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.confirmText strong {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+/* ---------- empty ---------- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 680px;
+  padding: 44px 24px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--fg);
+}
+
+.emptyTitle {
+  margin-top: 14px;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.emptyText {
+  max-width: 340px;
+  margin-top: 4px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}

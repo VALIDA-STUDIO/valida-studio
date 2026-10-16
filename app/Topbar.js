@@ -16,6 +16,7 @@ const isProjectPage = (p) => p === "/" || p === "/project/settings" || p.startsW
 
 // Trailing breadcrumb segments for a path
 function segments(pathname) {
+  if (pathname.startsWith("/canvas/commands/")) return ["Project Canvas", "Commands"];
   if (pathname.startsWith("/canvas/")) {
     const cat = findCategory(pathname.slice("/canvas/".length));
     return cat ? ["Project Canvas", cat.label] : ["Project Canvas"];

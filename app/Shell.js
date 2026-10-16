@@ -52,6 +52,33 @@ export const getProjects = cache(async () => {
   return { projects, activeId };
 });
 
+// Commands of a project, in creation order
+export const getCommands = cache(async (projectId) => {
+  if (!projectId) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("project_commands")
+    .select("id, name, updated_at")
+    .eq("project_id", projectId)
+    .order("created_at");
+  if (error) console.error("commands query failed:", error.message);
+  return data ?? [];
+});
+
+// One command of a project, with its canvas graph
+export const getCommand = cache(async (projectId, id) => {
+  if (!projectId || !id) return null;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("project_commands")
+    .select("id, name, graph")
+    .eq("project_id", projectId)
+    .eq("id", id)
+    .maybeSingle();
+  if (error) console.error("command query failed:", error.message);
+  return data ?? null;
+});
+
 // Sidebar + content area shared by every signed-in page.
 export default async function Shell({ children }) {
   const [{ name, avatar }, plan, { projects, activeId }] = await Promise.all([

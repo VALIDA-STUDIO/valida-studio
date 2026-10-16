@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
-import { getProjects } from "../../../Shell";
+import { getProjects, getCommands } from "../../../Shell";
 import { findCategory } from "../../../canvas/categories";
 import PluginConfig from "../PluginConfig";
+import CommandList from "../CommandList";
 import styles from "../../dashboard.module.css";
 
-// One Project Canvas category. Config has its form; the others are empty for now.
+// One Project Canvas category. Commands lists the commands, Config has its form, Events is empty for now.
 async function Category({ params }) {
   const { category } = await params;
   const cat = findCategory(category);
@@ -16,6 +17,7 @@ async function Category({ params }) {
   if (!project) redirect("/");
 
   if (cat.slug === "config") return <PluginConfig project={project} />;
+  if (cat.slug === "commands") return <CommandList project={project} commands={await getCommands(project.id)} />;
 
   return (
     <div className={styles.page}>
