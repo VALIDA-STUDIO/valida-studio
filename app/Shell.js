@@ -58,7 +58,7 @@ export const getNodes = cache(async (projectId) => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("project_nodes")
-    .select("id, parent_id, kind, name")
+    .select("id, parent_id, kind, name, graph")
     .eq("project_id", projectId);
   if (error) console.error("nodes query failed:", error.message);
   return data ?? [];

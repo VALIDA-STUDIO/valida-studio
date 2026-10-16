@@ -1,0 +1,269 @@
+/* fills the content area under the 56px top bar */
+.wrap {
+  height: calc(100dvh - 56px);
+  min-height: 420px;
+}
+
+/* React Flow theme hooks → our tokens */
+.flow {
+  --xy-background-color: var(--bg);
+  --xy-background-pattern-color: var(--border-strong);
+  --xy-edge-stroke: var(--muted);
+  --xy-edge-stroke-selected: var(--fg);
+  --xy-edge-stroke-width: 1.5;
+  --xy-connectionline-stroke: var(--fg);
+  --xy-handle-background-color: var(--bg);
+  --xy-handle-border-color: var(--fg);
+  --xy-controls-button-background-color: var(--card-bg);
+  --xy-controls-button-background-color-hover: var(--surface-hover);
+  --xy-controls-button-color: var(--muted);
+  --xy-controls-button-color-hover: var(--fg);
+  --xy-controls-button-border-color: var(--border);
+  --xy-controls-box-shadow: none;
+  --xy-minimap-background-color: var(--card-bg);
+  --xy-minimap-mask-background-color: color-mix(in srgb, var(--bg) 70%, transparent);
+  --xy-minimap-node-background-color: var(--border-strong);
+  --xy-minimap-node-stroke-color: transparent;
+  --xy-selection-background-color: color-mix(in srgb, var(--fg) 6%, transparent);
+  --xy-selection-border: 1px solid var(--border-strong);
+  --xy-attribution-background-color: transparent;
+}
+
+.flow :global(.react-flow__minimap),
+.flow :global(.react-flow__controls) {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.flow :global(.react-flow__controls-button) {
+  border-bottom: 1px solid var(--border);
+}
+
+/* ---------- node card ---------- */
+
+.node {
+  min-width: 200px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--fg);
+  font-size: 13px;
+  transition: border-color 0.12s;
+}
+
+.node:hover {
+  border-color: var(--border-strong);
+}
+
+.node[data-selected] {
+  border-color: var(--fg);
+}
+
+.nodeHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.nodeKind {
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--tag-bg);
+}
+
+.node[data-kind="event"] .nodeKind {
+  color: var(--bg);
+  background: var(--fg);
+}
+
+.node[data-kind="condition"] .nodeKind {
+  border: 1px solid var(--border-strong);
+  background: transparent;
+}
+
+.nodeTitle {
+  font-weight: 600;
+}
+
+.nodeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+.nodeField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nodeField span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.nodeField input {
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.nodeField input:focus {
+  border-color: var(--fg);
+}
+
+.nodeField input::placeholder {
+  color: var(--border-strong);
+}
+
+.nodeOutputs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.nodeOutput {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 14px 0 12px;
+  font-size: 11.5px;
+  line-height: 18px;
+  color: var(--muted);
+}
+
+/* handles: small rings; output ones sit on their row's right edge */
+.handle {
+  width: 10px;
+  height: 10px;
+  border-width: 1.5px;
+}
+
+.nodeOutput :global(.react-flow__handle) {
+  top: 50%;
+}
+
+/* ---------- palette ---------- */
+
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 176px;
+  padding: 8px;
+  margin: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+}
+
+.paletteGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.paletteLabel {
+  padding: 2px 8px 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.paletteItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.paletteItem:hover {
+  background: var(--surface-hover);
+}
+
+.paletteDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+
+.paletteDot[data-kind="event"] {
+  background: var(--fg);
+}
+
+.paletteDot[data-kind="condition"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--fg);
+}
+
+/* ---------- status + hint ---------- */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 10px;
+  margin: 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card-bg);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.status[data-status="dirty"] .statusDot,
+.status[data-status="saving"] .statusDot {
+  background: var(--border-strong);
+}
+
+.status[data-status="error"] .statusDot {
+  background: #ef4444;
+}
+
+.hint {
+  margin: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px dashed var(--border-strong);
+  font-size: 12.5px;
+  color: var(--muted);
+}

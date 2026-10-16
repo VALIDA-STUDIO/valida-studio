@@ -1,16 +1,9 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { getProjects, getNodes } from "../../../Shell";
-import styles from "../../dashboard.module.css";
+import Editor from "../../../editor/Editor";
 
-const FileIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
-    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-  </svg>
-);
-
-// Canvas for one file. The node editor goes here; for now it shows which file is open.
+// Canvas for one file: the node editor, graph loaded from the database.
 async function FileCanvas({ params }) {
   const { id } = await params;
   const { activeId } = await getProjects();
@@ -18,22 +11,7 @@ async function FileCanvas({ params }) {
   const file = nodes.find((n) => n.id === id && n.kind === "file");
   if (!file) redirect("/");
 
-  // breadcrumb-ish path: folder / folder / file
-  const byId = new Map(nodes.map((n) => [n.id, n]));
-  const path = [];
-  for (let cur = file; cur; cur = cur.parent_id ? byId.get(cur.parent_id) : null) path.unshift(cur.name);
-
-  return (
-    <div className={styles.page}>
-      <div className={styles.empty}>
-        <span className={styles.emptyIcon}>
-          <FileIcon />
-        </span>
-        <h2 className={styles.emptyTitle}>{file.name}</h2>
-        <p className={styles.emptyText}>{path.join(" / ")} — the node editor for this file will live here.</p>
-      </div>
-    </div>
-  );
+  return <Editor fileId={file.id} graph={file.graph} />;
 }
 
 export default function FilePage({ params }) {
