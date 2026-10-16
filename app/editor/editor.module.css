@@ -93,6 +93,56 @@
   color: var(--muted);
 }
 
+/* block kinds: action = tag, condition = outlined */
+.nodeKind[data-kind] {
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 16px;
+  background: var(--tag-bg);
+}
+
+.nodeKind[data-kind="condition"] {
+  border: 1px solid var(--border-strong);
+  background: transparent;
+}
+
+.nodeName {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* icon box of a block (node head, panel head, picker) */
+.nodeIcon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  flex-shrink: 0;
+}
+
+.nodeIcon[data-kind="condition"] {
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+.nodeSummary {
+  font-size: 12.5px;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .nodeBody {
   display: flex;
   flex-direction: column;
@@ -253,11 +303,25 @@
   overflow-y: auto;
   border-left: 1px solid var(--border);
   background: var(--bg);
+  user-select: none; /* a connection drag that ends here must not select text */
+}
+
+.inspector input,
+.inspector textarea {
+  user-select: text;
 }
 
 .insHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 16px;
   border-bottom: 1px solid var(--border);
+}
+
+.insTitle {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .usage {
@@ -516,4 +580,187 @@
   color: var(--fg);
   border-color: var(--fg);
   background: var(--surface-hover);
+}
+
+/* ---------- danger zone ---------- */
+
+.danger {
+  border-bottom: none;
+}
+
+.dangerTitle {
+  color: #ef4444;
+}
+
+.dangerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.dangerRow .sectionText {
+  margin-top: 0;
+}
+
+.dangerConfirm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dangerConfirm .sectionText {
+  margin-top: 0;
+}
+
+.dangerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--tag-bg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--fg);
+}
+
+/* ---------- block picker ---------- */
+
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 256px;
+  max-height: calc(100% - 70px);
+  user-select: none;
+  padding: 8px;
+  margin: 58px 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  overflow-y: auto;
+}
+
+.paletteSearch {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 9px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  transition: border-color 0.12s;
+}
+
+.paletteSearch:focus-within {
+  border-color: var(--fg);
+}
+
+.paletteSearch input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.paletteSearch input::placeholder {
+  color: var(--border-strong);
+}
+
+.paletteGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.paletteLabel {
+  padding: 4px 8px 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.paletteItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 5px 6px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.paletteItem:hover {
+  background: var(--surface-hover);
+}
+
+.paletteIcon {
+  composes: nodeIcon;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+}
+
+.paletteText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.paletteTitle {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.paletteDesc {
+  font-size: 11.5px;
+  line-height: 1.25;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paletteAdd {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.paletteItem:hover .paletteAdd {
+  opacity: 1;
+}
+
+.paletteEmpty {
+  padding: 6px 8px 4px;
+  font-size: 12.5px;
+  color: var(--muted);
 }

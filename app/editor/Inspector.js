@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import ChipsInput from "../ChipsInput";
+import s from "../(app)/settings/settings.module.css";
 import { ARG_GROUPS, ARG_TYPES, SENDERS, LIMITS, usage } from "../canvas/commandSchema";
 import styles from "./editor.module.css";
 
@@ -24,7 +26,13 @@ const Field = ({ label, error, children }) => (
 );
 
 // Right-hand panel: everything about the command that isn't a node yet.
-export default function Inspector({ cmd, errors, onChange }) {
+const CONFIRM_WORD = "DELETE";
+
+export default function Inspector({ cmd, errors, onChange, onDelete, deleting }) {
+  const [confirm, setConfirm] = useState(false);
+  const [typed, setTyped] = useState("");
+  const ready = typed.trim().toUpperCase() === CONFIRM_WORD;
+
   const set = (key) => (v) => onChange({ ...cmd, [key]: v });
   const setArg = (i, patch) => onChange({ ...cmd, args: cmd.args.map((a, j) => (j === i ? { ...a, ...patch } : a)) });
   const removeArg = (i) => onChange({ ...cmd, args: cmd.args.filter((_, j) => j !== i) });
@@ -125,6 +133,49 @@ export default function Inspector({ cmd, errors, onChange }) {
             <PlusIcon />
             Add argument
           </button>
+        )}
+      </section>
+
+      <section className={`${styles.section} ${styles.danger}`}>
+        <h3 className={`${styles.sectionTitle} ${styles.dangerTitle}`}>Danger zone</h3>
+        {confirm ? (
+          <form
+            className={styles.dangerConfirm}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (ready) onDelete();
+            }}
+          >
+            <span className={styles.sectionText}>
+              Type <code className={styles.code}>{CONFIRM_WORD}</code> to delete /{cmd.name}. This cannot be undone.
+            </span>
+            <input
+              className={`${styles.input} ${styles.mono}`}
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              onKeyDown={(e) => e.key === "Escape" && (setConfirm(false), setTyped(""))}
+              placeholder={CONFIRM_WORD}
+              autoComplete="off"
+              spellCheck={false}
+              autoFocus
+              aria-label="Type DELETE to confirm"
+            />
+            <div className={styles.dangerActions}>
+              <button className={s.btn} type="button" onClick={() => (setConfirm(false), setTyped(""))} disabled={deleting}>
+                Cancel
+              </button>
+              <button className={s.btnDanger} type="submit" disabled={!ready || deleting}>
+                {deleting ? "Deleting…" : "Delete"}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className={styles.dangerRow}>
+            <span className={styles.sectionText}>Remove this command and its canvas.</span>
+            <button className={s.btnDanger} type="button" onClick={() => setConfirm(true)}>
+              Delete command
+            </button>
+          </div>
         )}
       </section>
     </aside>

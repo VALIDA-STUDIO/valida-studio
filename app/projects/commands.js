@@ -45,9 +45,10 @@ export async function saveCommand({ id, command }) {
   return { ok: true, command: value };
 }
 
-// Node positions of one command's canvas
+// Canvas of one command: block nodes (with their values), the command node's position, and the edges
 export async function saveCommandGraph({ id, graph }) {
-  if (JSON.stringify(graph ?? {}).length > 50_000) return { error: "Graph too large" };
+  if (!Array.isArray(graph?.nodes) || !Array.isArray(graph?.edges)) return { error: "Invalid graph" };
+  if (JSON.stringify(graph).length > 150_000) return { error: "Graph too large" };
 
   const supabase = await createClient();
   const { data, error } = await supabase.from("project_commands").update({ graph: graph ?? {} }).eq("id", String(id)).select("id");

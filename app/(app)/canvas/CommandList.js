@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { createCommand, deleteCommand } from "../../projects/commands";
+import { createCommand } from "../../projects/commands";
 import { usage } from "../../canvas/commandSchema";
 import s from "../settings/settings.module.css";
 import c from "./commands.module.css";
@@ -18,23 +18,17 @@ const ChevronIcon = () => (
     <path d="m9 18 6-6-6-6" />
   </svg>
 );
-const TrashIcon = () => (
-  <svg {...icon} width="14" height="14">
-    <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6M10 11v6M14 11v6" />
-  </svg>
-);
 const PlusIcon = () => (
   <svg {...icon} width="14" height="14">
     <path d="M12 5v14M5 12h14" />
   </svg>
 );
 
-// Commands of the active project: create, open in the editor, delete.
+// Commands of the active project: create here, open in the editor (deleting lives there too).
 export default function CommandList({ project, commands }) {
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-  const [confirm, setConfirm] = useState(null); // id awaiting delete confirmation
   const [pending, startTransition] = useTransition();
   const input = useRef(null);
 
@@ -53,13 +47,6 @@ export default function CommandList({ project, commands }) {
       cancel();
     });
   };
-
-  const remove = (id) =>
-    startTransition(async () => {
-      const res = await deleteCommand(id);
-      if (res?.error) setError(res.error);
-      setConfirm(null);
-    });
 
   return (
     <div className={s.page}>
@@ -115,37 +102,18 @@ export default function CommandList({ project, commands }) {
         <ul className={c.list}>
           {commands.map((cmd) => (
             <li key={cmd.id} className={c.row} data-pending={pending || undefined}>
-              {confirm === cmd.id ? (
-                <div className={c.confirm}>
-                  <span className={c.confirmText}>
-                    Delete <strong>/{cmd.name}</strong>? This cannot be undone.
-                  </span>
-                  <button className={s.btn} type="button" onClick={() => setConfirm(null)} disabled={pending}>
-                    Cancel
-                  </button>
-                  <button className={s.btnDanger} type="button" onClick={() => remove(cmd.id)} disabled={pending}>
-                    Delete
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <Link className={c.rowLink} href={`/canvas/commands/${cmd.id}`}>
-                    <span className={c.rowIcon}>
-                      <TerminalIcon />
-                    </span>
-                    <span className={c.rowText}>
-                      <span className={c.rowName}>{usage(cmd)}</span>
-                      {cmd.description && <span className={c.rowDesc}>{cmd.description}</span>}
-                    </span>
-                    <span className={c.rowChevron}>
-                      <ChevronIcon />
-                    </span>
-                  </Link>
-                  <button className={c.rowDelete} type="button" title="Delete" aria-label={`Delete /${cmd.name}`} onClick={() => setConfirm(cmd.id)}>
-                    <TrashIcon />
-                  </button>
-                </>
-              )}
+              <Link className={c.rowLink} href={`/canvas/commands/${cmd.id}`}>
+                <span className={c.rowIcon}>
+                  <TerminalIcon />
+                </span>
+                <span className={c.rowText}>
+                  <span className={c.rowName}>{usage(cmd)}</span>
+                  {cmd.description && <span className={c.rowDesc}>{cmd.description}</span>}
+                </span>
+                <span className={c.rowChevron}>
+                  <ChevronIcon />
+                </span>
+              </Link>
             </li>
           ))}
         </ul>
