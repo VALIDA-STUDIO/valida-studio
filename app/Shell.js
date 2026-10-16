@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import UserMenu from "./UserMenu";
@@ -9,6 +10,7 @@ import styles from "./Shell.module.css";
 // Loads the signed-in user, or sends the visitor straight to Discord.
 // cache() dedupes the call when both the layout and a page need it in one request.
 export const requireUser = cache(async () => {
+  await connection(); // request-time only: supabase-js reads the clock, which can't be prerendered
   const supabase = await createClient();
   const {
     data: { user },
@@ -44,18 +46,18 @@ export const getProjects = cache(async () => {
   const { user } = await requireUser();
   const supabase = await createClient();
 
-  let { data: projects } = await supabase
+  let { data: projects, error } = await supabase
     .from("projects")
     .select("id, name, icon")
     .order("created_at", { ascending: true });
 
-  if (!projects?.length) {
-    const { data: seeded } = await supabase
-      .from("projects")
-      .insert(EXAMPLE_PROJECTS.map((p) => ({ ...p, owner: user.id })))
-      .select("id, name, icon");
+  // First visit: seed examples. The DB function takes a per-user lock so two
+  // parallel requests can't both seed.
+  if (!error && !projects?.length) {
+    const { data: seeded } = await supabase.rpc("seed_example_projects", { examples: EXAMPLE_PROJECTS });
     projects = seeded ?? [];
   }
+  if (error) console.error("projects query failed:", error.message);
 
   const wanted = (await cookies()).get("valida.activeProject")?.value;
   const activeId = projects.some((p) => p.id === wanted) ? wanted : projects[0]?.id ?? null;
