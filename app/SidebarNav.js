@@ -49,7 +49,8 @@ export default function SidebarNav({ project, nodes }) {
       <FileTree
         projectId={project.id}
         nodes={nodes}
-        root={{ href: "/", label: "Project Canvas", icon: <CanvasIcon />, active: pathname === "/" }}
+        selectedId={pathname.startsWith("/file/") ? pathname.slice("/file/".length) : null}
+        root={{ href: "/", label: "Project Canvas", icon: <CanvasIcon />, active: pathname === "/" || pathname.startsWith("/file/") }}
       />
       {link(items[1])}
     </nav>

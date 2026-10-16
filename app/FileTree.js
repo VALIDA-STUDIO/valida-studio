@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createNode, renameNode, deleteNode } from "./projects/nodes";
 import styles from "./FileTree.module.css";
 
@@ -106,11 +106,11 @@ function NameInput({ initial, placeholder, onCommit, onCancel }) {
   );
 }
 
-export default function FileTree({ projectId, nodes, root }) {
+export default function FileTree({ projectId, nodes, root, selectedId }) {
+  const router = useRouter();
   const storageKey = `valida.tree.${projectId}`;
   const [expanded, setExpanded] = useState(() => new Set(["root"]));
   const [editing, setEditing] = useState(null); // { mode: "create", parentId, kind } | { mode: "rename", id } | { mode: "delete", id }
-  const [selected, setSelected] = useState(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
@@ -216,15 +216,15 @@ export default function FileTree({ projectId, nodes, root }) {
         <div
           className={styles.row}
           style={indent}
-          data-selected={selected === n.id || undefined}
-          onClick={() => (isFolder ? toggle(n.id) : setSelected(n.id))}
+          data-selected={selectedId === n.id || undefined}
+          onClick={() => (isFolder ? toggle(n.id) : router.push(`/file/${n.id}`))}
           onDoubleClick={() => setEditing({ mode: "rename", id: n.id })}
           role="treeitem"
           aria-expanded={isFolder ? isOpen : undefined}
-          aria-selected={selected === n.id}
+          aria-selected={selectedId === n.id}
           tabIndex={0}
           onKeyDown={(e) => {
-            if (e.key === "Enter") isFolder ? toggle(n.id) : setSelected(n.id);
+            if (e.key === "Enter") isFolder ? toggle(n.id) : router.push(`/file/${n.id}`);
             if (e.key === "F2") setEditing({ mode: "rename", id: n.id });
             if (e.key === "Delete") setEditing({ mode: "delete", id: n.id });
           }}
@@ -291,22 +291,36 @@ export default function FileTree({ projectId, nodes, root }) {
   return (
     <div className={styles.tree} data-pending={pending || undefined}>
       {/* root row: fold chevron + page link + root actions */}
-      <div className={`${styles.row} ${styles.rootRow}`} data-active={root.active || undefined}>
+      <div
+        className={`${styles.row} ${styles.rootRow}`}
+        data-active={root.active || undefined}
+        role="link"
+        tabIndex={0}
+        aria-current={root.active ? "page" : undefined}
+        onClick={() => {
+          open("root");
+          router.push(root.href);
+        }}
+        onKeyDown={(e) => e.key === "Enter" && router.push(root.href)}
+      >
         <button
           className={styles.caret}
           data-open={rootOpen || undefined}
           type="button"
           aria-label={rootOpen ? "Collapse files" : "Expand files"}
           aria-expanded={rootOpen}
-          onClick={() => toggle("root")}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggle("root");
+          }}
         >
           <ChevronIcon />
         </button>
-        <Link href={root.href} className={styles.rootLink} aria-current={root.active ? "page" : undefined}>
+        <span className={styles.rootLink}>
           <span className={styles.rootIcon}>{root.icon}</span>
           <span className={styles.name}>{root.label}</span>
-        </Link>
-        <span className={styles.actions}>
+        </span>
+        <span className={styles.actions} onClick={(e) => e.stopPropagation()}>
           <button className={styles.action} type="button" title="New file" aria-label="New file" onClick={() => startCreate(null, "file")}>
             <FilePlusIcon />
           </button>

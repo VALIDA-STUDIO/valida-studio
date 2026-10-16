@@ -41,8 +41,8 @@ async function Canvas() {
         <span className={styles.emptyIcon}>
           <NodesIcon />
         </span>
-        <h2 className={styles.emptyTitle}>Nothing here yet</h2>
-        <p className={styles.emptyText}>Your plugin canvas will live here.</p>
+        <h2 className={styles.emptyTitle}>No file open</h2>
+        <p className={styles.emptyText}>Select a file in the sidebar, or create one from the Project Canvas row.</p>
       </div>
     </div>
   );

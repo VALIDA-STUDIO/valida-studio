@@ -26,7 +26,8 @@ const Sep = () => (
 // Breadcrumb bar above every signed-in page: Valida Studio › <project ▾> › <page>
 export default function Topbar({ projects, activeId }) {
   const pathname = usePathname();
-  const label = LABELS[pathname] ?? "";
+  const onFile = pathname.startsWith("/file/");
+  const label = LABELS[pathname] ?? (onFile ? "Project Canvas" : "");
 
   return (
     <header className={styles.bar}>
@@ -34,7 +35,7 @@ export default function Topbar({ projects, activeId }) {
         <Link className={styles.root} href="/">
           Valida Studio
         </Link>
-        {PROJECT_PAGES.has(pathname) && (
+        {(PROJECT_PAGES.has(pathname) || onFile) && (
           <>
             <Sep />
             <ProjectSwitcher projects={projects} activeId={activeId} />
