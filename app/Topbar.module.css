@@ -47,3 +47,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* wrapper for "sep + label" pairs; children lay out as direct flex items */
+.tail {
+  display: contents;
+}

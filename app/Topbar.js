@@ -3,16 +3,25 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ProjectSwitcher from "./ProjectSwitcher";
+import { findCategory } from "./canvas/categories";
 import styles from "./Topbar.module.css";
 
 const LABELS = {
-  "/": "Project Canvas",
   "/settings": "Settings",
   "/project/settings": "Project Settings",
 };
 
 // Account-level pages (settings) have no project context, so no switcher there.
-const PROJECT_PAGES = new Set(["/", "/project/settings"]);
+const isProjectPage = (p) => p === "/" || p === "/project/settings" || p.startsWith("/canvas/");
+
+// Trailing breadcrumb segments for a path
+function segments(pathname) {
+  if (pathname.startsWith("/canvas/")) {
+    const cat = findCategory(pathname.slice("/canvas/".length));
+    return cat ? ["Project Canvas", cat.label] : ["Project Canvas"];
+  }
+  return LABELS[pathname] ? [LABELS[pathname]] : [];
+}
 
 // Vercel-style slash between breadcrumb items
 const Sep = () => (
@@ -26,8 +35,7 @@ const Sep = () => (
 // Breadcrumb bar above every signed-in page: Valida Studio › <project ▾> › <page>
 export default function Topbar({ projects, activeId }) {
   const pathname = usePathname();
-  const onFile = pathname.startsWith("/file/");
-  const label = LABELS[pathname] ?? (onFile ? "Project Canvas" : "");
+  const crumbs = segments(pathname);
 
   return (
     <header className={styles.bar}>
@@ -35,20 +43,20 @@ export default function Topbar({ projects, activeId }) {
         <Link className={styles.root} href="/">
           Valida Studio
         </Link>
-        {(PROJECT_PAGES.has(pathname) || onFile) && (
+        {isProjectPage(pathname) && (
           <>
             <Sep />
             <ProjectSwitcher projects={projects} activeId={activeId} />
           </>
         )}
-        {label && (
-          <>
+        {crumbs.map((label, i) => (
+          <span key={label} className={styles.tail}>
             <Sep />
-            <span className={styles.current} aria-current="page">
+            <span className={styles.current} aria-current={i === crumbs.length - 1 ? "page" : undefined}>
               {label}
             </span>
-          </>
-        )}
+          </span>
+        ))}
       </nav>
     </header>
   );

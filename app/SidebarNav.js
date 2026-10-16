@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import FileTree from "./FileTree";
+import CanvasNav from "./CanvasNav";
 import styles from "./SidebarNav.module.css";
 
 const SlidersIcon = () => (
@@ -12,47 +12,28 @@ const SlidersIcon = () => (
   </svg>
 );
 
-const CanvasIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <rect width="6" height="6" x="3" y="3" rx="1.5" />
-    <rect width="6" height="6" x="15" y="15" rx="1.5" />
-    <rect width="6" height="6" x="15" y="3" rx="1.5" />
-    <path d="M9 6h6M6 9v6a3 3 0 0 0 3 3h6" />
-  </svg>
-);
+const ITEMS = [{ href: "/project/settings", label: "Project Settings", Icon: SlidersIcon }];
 
 // Project-level navigation; only meaningful once a project exists.
-export default function SidebarNav({ project, nodes }) {
+export default function SidebarNav({ project }) {
   const pathname = usePathname();
   if (!project) return null;
 
-  const items = [
-    { href: "/", label: "Project Canvas", Icon: CanvasIcon },
-    { href: "/project/settings", label: "Project Settings", Icon: SlidersIcon },
-  ];
-
-  const link = ({ href, label, Icon }) => {
-    const active = pathname === href;
-    return (
-      <Link key={href} href={href} className={styles.item} data-active={active || undefined} aria-current={active ? "page" : undefined}>
-        <span className={styles.caretSlot} aria-hidden="true" />
-        <span className={styles.icon}>
-          <Icon />
-        </span>
-        <span className={styles.label}>{label}</span>
-      </Link>
-    );
-  };
-
   return (
     <nav className={styles.nav} aria-label="Project">
-      <FileTree
-        projectId={project.id}
-        nodes={nodes}
-        selectedId={pathname.startsWith("/file/") ? pathname.slice("/file/".length) : null}
-        root={{ label: "Project Canvas", icon: <CanvasIcon /> }}
-      />
-      {link(items[1])}
+      <CanvasNav projectId={project.id} />
+      {ITEMS.map(({ href, label, Icon }) => {
+        const active = pathname === href;
+        return (
+          <Link key={href} href={href} className={styles.item} data-active={active || undefined} aria-current={active ? "page" : undefined}>
+            <span className={styles.caretSlot} aria-hidden="true" />
+            <span className={styles.icon}>
+              <Icon />
+            </span>
+            <span className={styles.label}>{label}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }
