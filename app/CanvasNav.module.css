@@ -5,39 +5,41 @@
 /* ---------- rows ---------- */
 
 .row {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 6px 0 2px;
-  border-radius: 6px;
+  gap: 8px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
   font-size: 13.5px;
-  color: var(--fg);
+  font-weight: 500;
+  color: var(--muted);
   cursor: pointer;
   user-select: none;
   outline: none;
-  transition: background 0.12s;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
 }
 
 .row:hover,
 .row:focus-visible {
+  color: var(--fg);
   background: var(--surface-hover);
 }
 
 .row[data-selected] {
+  color: var(--fg);
   background: var(--surface-hover);
-  box-shadow: inset 0 0 0 1px var(--border);
+  border-color: var(--border);
 }
 
 /* root row matches the Project Settings item exactly (38px, 14px/500) */
 .row.rootRow {
+  gap: 6px;
   height: 38px;
   padding: 0 9px 0 6px;
-  border: 1px solid transparent;
-  border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
+  color: var(--fg);
 }
 
 .rootIcon {
@@ -67,11 +69,12 @@
   transform: rotate(90deg);
 }
 
-/* nested rows: indent + a thin guide line under the root's chevron */
+/* category rows: indented so their labels line up under the root label */
 .children {
-  margin-left: 13px;
-  padding-left: 9px;
-  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 2px 0 0 26px;
 }
 
 .kind {
@@ -79,11 +82,6 @@
   place-items: center;
   width: 16px;
   flex-shrink: 0;
-  color: var(--muted);
-}
-
-.row[data-selected] .kind {
-  color: var(--fg);
 }
 
 .name {
