@@ -69,12 +69,14 @@
   transform: rotate(90deg);
 }
 
-/* category rows: indented so their labels line up under the root label */
+/* category rows: guide line under the root's chevron, labels lined up under the root label */
 .children {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 2px 0 0 26px;
+  margin: 2px 0 0 13px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
 }
 
 .kind {
