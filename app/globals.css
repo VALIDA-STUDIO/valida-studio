@@ -1,6 +1,10 @@
 /* ---------- design tokens: light is the default ---------- */
 
 :root {
+  /* danger colours, used by settings cards and editor panels */
+  --danger: #ef4444;
+  --danger-border: rgba(239, 68, 68, 0.45);
+  --danger-foot: rgba(239, 68, 68, 0.08);
   --bg: #ffffff;
   --fg: #0a0a0a;
   --sidebar-bg: #ffffff;

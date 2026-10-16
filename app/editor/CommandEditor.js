@@ -30,7 +30,8 @@ import styles from "./editor.module.css";
 const nodeTypes = { command: CommandNode, block: BlockNode };
 const LABELS = { saved: "Saved", dirty: "Unsaved", saving: "Saving…", error: "Not saved" };
 const arrow = { markerEnd: { type: MarkerType.ArrowClosed } };
-const fitViewOptions = { maxZoom: 1, padding: 0.3 };
+// leaves room for the block picker (left), toolbar/status (top) and hint (bottom)
+const fitViewOptions = { maxZoom: 1, padding: { top: "60px", right: "40px", bottom: "80px", left: "300px" } };
 const deleteKeys = ["Backspace", "Delete"];
 const newId = () => "b_" + Math.random().toString(36).slice(2, 8);
 
