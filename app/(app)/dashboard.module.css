@@ -1,0 +1,46 @@
+.page {
+  padding: 36px 40px;
+}
+
+/* dashed empty-state block, centered content */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 24px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--fg);
+}
+
+.emptyTitle {
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.emptyText {
+  max-width: 360px;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 20px 18px;
+  }
+}

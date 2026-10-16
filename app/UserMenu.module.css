@@ -1,0 +1,292 @@
+.wrap {
+  position: relative;
+}
+
+/* ---------- trigger chip ---------- */
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 60px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.trigger:hover,
+.trigger[data-open] {
+  background: var(--chip-hover);
+  border-color: var(--border-strong);
+}
+
+.avatar,
+.avatarFallback {
+  display: block;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.avatarFallback {
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--fg);
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+}
+
+/* verified seal pinned to the avatar's bottom-right corner, ringed by the chip background */
+.verified {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 16px;
+  height: 16px;
+  padding: 1.5px;
+  border-radius: 50%;
+  background: var(--sidebar-bg);
+  color: #0095f6; /* Meta verified blue */
+  transition: background 0.15s;
+}
+
+.trigger:hover .verified,
+.trigger[data-open] .verified {
+  background: var(--chip-hover);
+}
+
+.name {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* plan badge (default / premium), sits under the name */
+.plan {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  background: var(--tag-bg);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  overflow: hidden;
+}
+
+.plan[data-plan="premium"] {
+  color: var(--bg);
+  background: var(--fg);
+  border-color: var(--fg);
+}
+
+/* soft light sweep across the premium badge */
+.plan[data-plan="premium"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  animation: sheen 3.2s ease-in-out infinite;
+}
+
+/* on a dark surface the sweep is a soft dark highlight instead of white */
+.plan[data-plan="premium"]::after {
+  background: linear-gradient(110deg, transparent 30%, var(--sheen) 50%, transparent 70%);
+}
+
+@keyframes sheen {
+  0%, 60% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan[data-plan="premium"]::after { animation: none; }
+}
+
+
+.chevron {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.15s;
+}
+
+.trigger:hover .chevron {
+  color: var(--fg);
+}
+
+.trigger[data-open] .chevron {
+  color: var(--fg);
+  transform: rotate(180deg);
+}
+
+/* ---------- popover ---------- */
+
+.menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  animation: fade 0.12s ease-out;
+  z-index: 10;
+}
+
+/* opacity only: no transform so the menu never appears to shift into place */
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* upgrade row: slightly raised surface, two-line text, arrow slides on hover */
+.upgrade {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px 8px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-hover);
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.upgrade:hover {
+  border-color: var(--border-strong);
+}
+
+.upgradeText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.upgradeTitle {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.upgradeSub {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  transition: transform 0.15s, color 0.15s;
+}
+
+.upgrade:hover .arrow {
+  color: var(--fg);
+  transform: translateX(2px);
+}
+
+.divider {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--border);
+}
+
+/* icon container so all icons line up and read as one column */
+.iconBox {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: color 0.12s, background 0.12s;
+}
+
+.upgrade .iconBox {
+  color: var(--bg);
+  background: var(--fg);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 36px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.item:hover {
+  background: var(--surface-hover);
+}
+
+.item:hover .iconBox {
+  color: var(--fg);
+}
+
+.kbd {
+  margin-left: auto;
+  padding: 0 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  font: inherit;
+  font-size: 10.5px;
+  line-height: 16px;
+  color: var(--muted);
+}
+
+

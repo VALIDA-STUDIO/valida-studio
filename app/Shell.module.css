@@ -1,0 +1,92 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100vh;
+  height: 100dvh;
+  width: 272px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+}
+
+/* ---------- brand (top, centered, static) ---------- */
+
+.brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  /* spans the full 56px like the top bar, so logo centre and divider both line up with it */
+  height: 56px;
+  margin: -16px 0 0;
+  color: var(--fg);
+  user-select: none;
+}
+
+/* soft divider: fades out towards both ends instead of a hard edge-to-edge line */
+.brand::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong) 25%, var(--border-strong) 75%, transparent);
+}
+
+/* logo mark as a mask so it takes the current text colour (white on dark, black on light) */
+.logo {
+  width: 24px;
+  height: 24px;
+  background: currentColor;
+  -webkit-mask: url("/logo-mask.png") center / contain no-repeat;
+  mask: url("/logo-mask.png") center / contain no-repeat;
+}
+
+.brandName {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
