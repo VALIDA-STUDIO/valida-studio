@@ -5,6 +5,11 @@
   margin-top: 16px;
 }
 
+/* the file tree sits between Canvas and Settings, slightly inset */
+.treeWrap {
+  padding-left: 8px;
+}
+
 .item {
   display: flex;
   align-items: center;

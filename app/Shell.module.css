@@ -62,8 +62,15 @@
   white-space: nowrap;
 }
 
-.spacer {
+/* middle of the sidebar scrolls when the file tree gets long */
+.navArea {
   flex: 1;
+  min-height: 0;
+  margin: 0 -8px 12px;
+  padding: 0 8px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
 .main {

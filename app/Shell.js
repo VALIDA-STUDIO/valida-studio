@@ -52,6 +52,18 @@ export const getProjects = cache(async () => {
   return { projects, activeId };
 });
 
+// Files and folders of the active project (flat list; the tree is built client-side)
+export const getNodes = cache(async (projectId) => {
+  if (!projectId) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("project_nodes")
+    .select("id, parent_id, kind, name")
+    .eq("project_id", projectId);
+  if (error) console.error("nodes query failed:", error.message);
+  return data ?? [];
+});
+
 // Sidebar + content area shared by every signed-in page.
 export default async function Shell({ children }) {
   const [{ name, avatar }, plan, { projects, activeId }] = await Promise.all([
@@ -59,6 +71,8 @@ export default async function Shell({ children }) {
     getPlan(),
     getProjects(),
   ]);
+  const project = projects.find((p) => p.id === activeId) ?? null;
+  const nodes = await getNodes(project?.id);
 
   return (
     <div className={styles.shell}>
@@ -67,8 +81,9 @@ export default async function Shell({ children }) {
           <span className={styles.logo} aria-hidden="true" />
           <span className={styles.brandName}>Valida Studio</span>
         </div>
-        <SidebarNav hasProject={projects.length > 0} />
-        <div className={styles.spacer} />
+        <div className={styles.navArea}>
+          <SidebarNav project={project} nodes={nodes} />
+        </div>
         <UserMenu name={name} avatar={avatar} plan={plan} />
       </aside>
       <div className={styles.main}>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import FileTree from "./FileTree";
 import styles from "./SidebarNav.module.css";
 
 const SlidersIcon = () => (
@@ -21,28 +22,34 @@ const CanvasIcon = () => (
 );
 
 // Project-level navigation; only meaningful once a project exists.
-export default function SidebarNav({ hasProject }) {
+export default function SidebarNav({ project, nodes }) {
   const pathname = usePathname();
-  if (!hasProject) return null;
+  if (!project) return null;
 
   const items = [
     { href: "/", label: "Project Canvas", Icon: CanvasIcon },
     { href: "/project/settings", label: "Project Settings", Icon: SlidersIcon },
   ];
 
+  const link = ({ href, label, Icon }) => {
+    const active = pathname === href;
+    return (
+      <Link key={href} href={href} className={styles.item} data-active={active || undefined} aria-current={active ? "page" : undefined}>
+        <span className={styles.icon}>
+          <Icon />
+        </span>
+        <span className={styles.label}>{label}</span>
+      </Link>
+    );
+  };
+
   return (
     <nav className={styles.nav} aria-label="Project">
-      {items.map(({ href, label, Icon }) => {
-        const active = pathname === href;
-        return (
-          <Link key={href} href={href} className={styles.item} data-active={active || undefined} aria-current={active ? "page" : undefined}>
-            <span className={styles.icon}>
-              <Icon />
-            </span>
-            <span className={styles.label}>{label}</span>
-          </Link>
-        );
-      })}
+      {link(items[0])}
+      <div className={styles.treeWrap}>
+        <FileTree projectId={project.id} nodes={nodes} />
+      </div>
+      {link(items[1])}
     </nav>
   );
 }
