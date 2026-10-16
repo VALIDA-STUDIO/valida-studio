@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import ProjectIcon, { ICON_NAMES } from "./ProjectIcon";
+import ProjectIcon from "./ProjectIcon";
+import IconPicker from "./IconPicker";
 import { createProject } from "./projects/actions";
 import styles from "./ProjectSwitcher.module.css";
 
@@ -60,22 +61,8 @@ export default function CreateProjectForm({ className, title = "New project", on
         />
       </div>
 
-      <div className={styles.iconGrid} role="radiogroup" aria-label="Icon">
-        {ICON_NAMES.map((n) => (
-          <button
-            key={n}
-            className={styles.iconOpt}
-            data-active={n === icon || undefined}
-            type="button"
-            role="radio"
-            aria-checked={n === icon}
-            aria-label={n}
-            title={n}
-            onClick={() => setIcon(n)}
-          >
-            <ProjectIcon icon={n} />
-          </button>
-        ))}
+      <div className={styles.pickerWrap}>
+        <IconPicker value={icon} onChange={setIcon} rows={3} />
       </div>
 
       {error && <p className={styles.error}>{error}</p>}

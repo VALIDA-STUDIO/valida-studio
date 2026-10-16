@@ -375,39 +375,8 @@
   border-color: var(--fg);
 }
 
-.iconGrid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  padding: 10px 4px 4px;
-}
-
-.iconOpt {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  border-radius: 7px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  transition: color 0.12s, background 0.12s, border-color 0.12s;
-}
-
-.iconOpt svg {
-  width: 15px;
-  height: 15px;
-}
-
-.iconOpt:hover {
-  color: var(--fg);
-  background: var(--surface-hover);
-}
-
-.iconOpt[data-active] {
-  color: var(--bg);
-  background: var(--fg);
-  border-color: var(--fg);
+.pickerWrap {
+  padding: 10px 4px 2px;
 }
 
 .formFoot {

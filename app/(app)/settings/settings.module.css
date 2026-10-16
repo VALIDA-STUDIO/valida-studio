@@ -129,12 +129,9 @@
   height: 36px;
 }
 
-.iconGridWide {
-  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+.pickerWide {
   max-width: 420px;
   margin-top: 14px;
-  padding: 0;
-  gap: 6px;
 }
 
 .mono {

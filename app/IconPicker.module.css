@@ -1,0 +1,105 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* search field */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  transition: border-color 0.12s;
+}
+
+.search:focus-within {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.search input::placeholder {
+  color: var(--muted);
+}
+
+.search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* grid: fixed cell size, shows `--rows` rows, then scrolls */
+.grid {
+  --cell: 34px;
+  --gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--cell));
+  justify-content: space-between;
+  gap: var(--gap);
+  max-height: calc(var(--rows) * (var(--cell) + var(--gap)) - var(--gap));
+  padding: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.grid::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: var(--border-strong);
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+
+.cell svg {
+  width: 16px;
+  height: 16px;
+}
+
+.cell:hover {
+  color: var(--fg);
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.cell[data-active] {
+  color: var(--bg);
+  background: var(--fg);
+  border-color: var(--fg);
+}
+
+.none {
+  grid-column: 1 / -1;
+  padding: 10px 2px;
+  font-size: 13px;
+  color: var(--muted);
+}

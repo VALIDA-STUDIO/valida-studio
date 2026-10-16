@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import ProjectIcon, { ICON_NAMES } from "../../../ProjectIcon";
+import IconPicker from "../../../IconPicker";
 import { updateProject, deleteProject } from "../../../projects/actions";
 import s from "../../settings/settings.module.css";
 import f from "../../../ProjectSwitcher.module.css";
@@ -89,22 +89,8 @@ export default function ProjectSettings({ project }) {
               <div className={s.cardText}>
                 <h3 className={s.cardTitle}>Icon</h3>
                 <p className={s.cardDesc}>Pick the symbol shown next to the project name.</p>
-                <div className={`${f.iconGrid} ${s.iconGridWide}`} role="radiogroup" aria-label="Icon">
-                  {ICON_NAMES.map((n) => (
-                    <button
-                      key={n}
-                      className={f.iconOpt}
-                      data-active={n === icon || undefined}
-                      type="button"
-                      role="radio"
-                      aria-checked={n === icon}
-                      aria-label={n}
-                      title={n}
-                      onClick={() => setIcon(n)}
-                    >
-                      <ProjectIcon icon={n} />
-                    </button>
-                  ))}
+                <div className={s.pickerWide}>
+                  <IconPicker value={icon} onChange={setIcon} rows={4} />
                 </div>
               </div>
             </div>
