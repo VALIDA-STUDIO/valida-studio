@@ -24,11 +24,6 @@
   background: var(--surface-hover);
 }
 
-.row.rootRow[data-active] {
-  background: var(--surface-hover);
-  border-color: var(--border);
-}
-
 .rootLink {
   display: flex;
   align-items: center;
@@ -36,12 +31,6 @@
   flex: 1;
   min-width: 0;
   height: 100%;
-  color: var(--muted);
-  transition: color 0.12s;
-}
-
-.rootRow:hover .rootLink,
-.rootRow[data-active] .rootLink {
   color: var(--fg);
 }
 

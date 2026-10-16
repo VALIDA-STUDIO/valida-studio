@@ -50,7 +50,7 @@ export default function SidebarNav({ project, nodes }) {
         projectId={project.id}
         nodes={nodes}
         selectedId={pathname.startsWith("/file/") ? pathname.slice("/file/".length) : null}
-        root={{ href: "/", label: "Project Canvas", icon: <CanvasIcon />, active: pathname === "/" || pathname.startsWith("/file/") }}
+        root={{ label: "Project Canvas", icon: <CanvasIcon /> }}
       />
       {link(items[1])}
     </nav>

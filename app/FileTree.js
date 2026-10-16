@@ -290,32 +290,19 @@ export default function FileTree({ projectId, nodes, root, selectedId }) {
 
   return (
     <div className={styles.tree} data-pending={pending || undefined}>
-      {/* root row: fold chevron + page link + root actions */}
+      {/* root row: folds/unfolds the files section; it never navigates */}
       <div
         className={`${styles.row} ${styles.rootRow}`}
-        data-active={root.active || undefined}
-        role="link"
+        role="button"
         tabIndex={0}
-        aria-current={root.active ? "page" : undefined}
-        onClick={() => {
-          open("root");
-          router.push(root.href);
-        }}
-        onKeyDown={(e) => e.key === "Enter" && router.push(root.href)}
+        aria-expanded={rootOpen}
+        aria-label={rootOpen ? "Collapse files" : "Expand files"}
+        onClick={() => toggle("root")}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle("root"))}
       >
-        <button
-          className={styles.caret}
-          data-open={rootOpen || undefined}
-          type="button"
-          aria-label={rootOpen ? "Collapse files" : "Expand files"}
-          aria-expanded={rootOpen}
-          onClick={(e) => {
-            e.stopPropagation();
-            toggle("root");
-          }}
-        >
+        <span className={styles.caret} data-open={rootOpen || undefined}>
           <ChevronIcon />
-        </button>
+        </span>
         <span className={styles.rootLink}>
           <span className={styles.rootIcon}>{root.icon}</span>
           <span className={styles.name}>{root.label}</span>
