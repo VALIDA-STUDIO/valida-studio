@@ -42,7 +42,7 @@ export const getProjects = cache(async () => {
 
   const { data, error } = await supabase
     .from("projects")
-    .select("id, name")
+    .select("id, name, config")
     .order("created_at", { ascending: true });
   if (error) console.error("projects query failed:", error.message);
   const projects = data ?? [];
