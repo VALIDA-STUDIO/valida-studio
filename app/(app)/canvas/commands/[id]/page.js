@@ -11,7 +11,8 @@ async function Command({ params }) {
   const command = await getCommand(activeId, id);
   if (!command) redirect("/canvas/commands");
 
-  return <CommandEditor command={{ id: command.id, name: command.name }} graph={command.graph} />;
+  const { graph, ...rest } = command;
+  return <CommandEditor command={rest} graph={graph} />;
 }
 
 export default function CommandPage({ params }) {

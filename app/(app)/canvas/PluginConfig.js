@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import ChipsInput from "./ChipsInput";
+import ChipsInput from "../../ChipsInput";
 import { saveConfig } from "../../projects/config";
 import s from "../settings/settings.module.css";
 import f from "../../ProjectSwitcher.module.css";

@@ -1,7 +1,14 @@
-/* fills the content area under the 56px top bar */
+/* fills the content area under the 56px top bar: canvas left, inspector right */
 .wrap {
+  display: flex;
   height: calc(100dvh - 56px);
   min-height: 420px;
+}
+
+.canvas {
+  position: relative;
+  flex: 1;
+  min-width: 0;
 }
 
 /* React Flow theme hooks → our tokens */
@@ -102,6 +109,26 @@
 
 .nodeText {
   font-size: 12px;
+  color: var(--muted);
+}
+
+.nodeArgs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.nodeArg {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--tag-bg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--fg);
+}
+
+.nodeArg[data-optional] {
   color: var(--muted);
 }
 
@@ -216,4 +243,277 @@
   border: 1px dashed var(--border-strong);
   font-size: 12.5px;
   color: var(--muted);
+}
+
+/* ---------- inspector ---------- */
+
+.inspector {
+  width: 340px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-left: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.insHead {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.usage {
+  display: block;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.section {
+  padding: 14px 16px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sectionTitle {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sectionText {
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.input {
+  width: 100%;
+  height: 32px;
+  padding: 0 9px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.input:focus {
+  border-color: var(--fg);
+}
+
+.input::placeholder {
+  color: var(--border-strong);
+}
+
+.mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+}
+
+.select {
+  padding-right: 26px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  cursor: pointer;
+}
+
+.nameField {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 9px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  transition: border-color 0.12s;
+}
+
+.nameField:focus-within {
+  border-color: var(--fg);
+}
+
+.nameField[data-error],
+.arg[data-error] {
+  border-color: #ef4444;
+}
+
+.slash {
+  margin-right: 1px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.nameInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.err {
+  font-size: 12px;
+  color: #ef4444;
+}
+
+/* segmented choice; selected is solid like the theme control */
+.seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  align-self: flex-start;
+}
+
+.segItem {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+
+.segItem:hover {
+  color: var(--fg);
+}
+
+.segItem[data-on] {
+  color: var(--bg);
+  background: var(--fg);
+}
+
+.segSm .segItem {
+  height: 22px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+/* ---------- arguments ---------- */
+
+.args {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.arg {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  transition: border-color 0.12s;
+}
+
+.arg .input {
+  background: var(--bg);
+}
+
+.argRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.argName {
+  flex: 1;
+  min-width: 0;
+}
+
+.arg .select {
+  width: 136px;
+  flex-shrink: 0;
+}
+
+.argRemove {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.12s, background 0.12s;
+}
+
+.argRemove:hover {
+  color: #ef4444;
+  background: var(--surface-hover);
+}
+
+.bound {
+  width: 64px;
+  height: 26px;
+  padding: 0 7px;
+  flex-shrink: 0;
+}
+
+.argHint {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 32px;
+  margin-top: 8px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.add:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+  background: var(--surface-hover);
 }

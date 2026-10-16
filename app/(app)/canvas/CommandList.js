@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { createCommand, deleteCommand } from "../../projects/commands";
+import { usage } from "../../canvas/commandSchema";
 import s from "../settings/settings.module.css";
 import c from "./commands.module.css";
 
@@ -132,7 +133,10 @@ export default function CommandList({ project, commands }) {
                     <span className={c.rowIcon}>
                       <TerminalIcon />
                     </span>
-                    <span className={c.rowName}>/{cmd.name}</span>
+                    <span className={c.rowText}>
+                      <span className={c.rowName}>{usage(cmd)}</span>
+                      {cmd.description && <span className={c.rowDesc}>{cmd.description}</span>}
+                    </span>
                     <span className={c.rowChevron}>
                       <ChevronIcon />
                     </span>

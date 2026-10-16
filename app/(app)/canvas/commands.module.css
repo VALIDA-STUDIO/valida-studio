@@ -87,7 +87,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 50px;
+  min-height: 52px;
   transition: opacity 0.12s;
 }
 
@@ -105,8 +105,8 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
-  height: 50px;
-  padding: 0 44px 0 16px;
+  min-height: 52px;
+  padding: 8px 44px 8px 16px;
   color: var(--fg);
   transition: background 0.12s;
 }
@@ -131,8 +131,23 @@
   color: var(--fg);
 }
 
-.rowName {
+.rowText {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.rowDesc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.rowName {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

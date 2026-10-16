@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import c from "./config.module.css";
+import c from "./ChipsInput.module.css";
 
 const XIcon = () => (
   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
@@ -10,7 +10,7 @@ const XIcon = () => (
 );
 
 // A list of short values shown as chips. Enter or comma adds, Backspace on an empty field removes the last one.
-export default function ChipsInput({ value = [], onChange, placeholder, max = 10, label }) {
+export default function ChipsInput({ value = [], onChange, placeholder, max = 10, label, size }) {
   const [draft, setDraft] = useState("");
   const input = useRef(null);
 
@@ -24,7 +24,7 @@ export default function ChipsInput({ value = [], onChange, placeholder, max = 10
   const remove = (i) => onChange(value.filter((_, j) => j !== i));
 
   return (
-    <div className={c.chips} onClick={() => input.current?.focus()}>
+    <div className={`${c.chips} ${size === "sm" ? c.sm : ""}`} onClick={() => input.current?.focus()}>
       {value.map((v, i) => (
         <span key={v} className={c.chip}>
           {v}

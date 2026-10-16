@@ -58,7 +58,7 @@ export const getCommands = cache(async (projectId) => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("project_commands")
-    .select("id, name, updated_at")
+    .select("id, name, description, args")
     .eq("project_id", projectId)
     .order("created_at");
   if (error) console.error("commands query failed:", error.message);
@@ -71,7 +71,7 @@ export const getCommand = cache(async (projectId, id) => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("project_commands")
-    .select("id, name, graph")
+    .select("id, name, description, permission, aliases, sender, args, graph")
     .eq("project_id", projectId)
     .eq("id", id)
     .maybeSingle();

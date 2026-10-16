@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
+import { ARG_TYPES } from "../canvas/commandSchema";
 import styles from "./editor.module.css";
 
 const TerminalIcon = () => (
@@ -10,8 +11,9 @@ const TerminalIcon = () => (
   </svg>
 );
 
-// The trigger node of a command canvas: the command itself, with one "runs" output.
+// The trigger node of a command canvas: the command, its arguments, and one "runs" output.
 function CommandNode({ data, selected }) {
+  const args = data.args ?? [];
   return (
     <div className={styles.node} data-selected={selected || undefined}>
       <div className={styles.nodeHead}>
@@ -21,8 +23,22 @@ function CommandNode({ data, selected }) {
         <span className={styles.nodeKind}>Command</span>
       </div>
       <div className={styles.nodeBody}>
-        <span className={styles.nodeTitle}>/{data.name}</span>
-        <span className={styles.nodeText}>Runs when a player types it.</span>
+        <span className={styles.nodeTitle}>/{data.name || "…"}</span>
+        {args.length ? (
+          <span className={styles.nodeArgs}>
+            {args.map((a, i) => (
+              <span key={i} className={styles.nodeArg} data-optional={a.required === false || undefined} title={ARG_TYPES[a.type]?.label}>
+                {a.required === false ? "[" : "<"}
+                {a.name || "?"}
+                {ARG_TYPES[a.type]?.last ? "…" : ""}
+                {a.required === false ? "]" : ">"}
+              </span>
+            ))}
+          </span>
+        ) : (
+          <span className={styles.nodeText}>No arguments</span>
+        )}
+        {data.description && <span className={styles.nodeText}>{data.description}</span>}
       </div>
       <div className={styles.nodeOutputs}>
         <div className={styles.nodeOutput}>
