@@ -2,7 +2,7 @@
 const nextConfig = {
   /* config options here */
   cacheComponents: true,
-  partialPrefetching: true,
+  partialPrefetching: false,
   // Title is static; streaming metadata only causes a flash of the URL in the tab on navigation.
   htmlLimitedBots: /.*/,
 };
