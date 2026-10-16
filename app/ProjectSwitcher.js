@@ -105,7 +105,7 @@ export default function ProjectSwitcher({ projects, activeId }) {
           aria-label="Switch project"
         >
           <span className={styles.icon}>
-            <ProjectIcon icon={active.icon} />
+            <ProjectIcon />
           </span>
           <span className={styles.name}>{active.name}</span>
           <span className={styles.chevron}>
@@ -154,7 +154,7 @@ export default function ProjectSwitcher({ projects, activeId }) {
                     onClick={() => pick(p.id)}
                   >
                     <span className={styles.itemMark}>
-                      <ProjectIcon icon={p.icon} />
+                      <ProjectIcon />
                     </span>
                     <span className={styles.itemText}>
                       <span className={styles.itemName}>{p.name}</span>

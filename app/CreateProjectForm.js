@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import ProjectIcon from "./ProjectIcon";
-import IconPicker from "./IconPicker";
 import { createProject } from "./projects/actions";
 import styles from "./ProjectSwitcher.module.css";
 
@@ -12,10 +11,9 @@ const BackIcon = () => (
   </svg>
 );
 
-// Name + icon picker. Used inside the project switcher and on the empty dashboard.
+// Project name form. Used inside the project switcher.
 export default function CreateProjectForm({ className, title = "New project", onBack, onCancel, onCreated }) {
   const [name, setName] = useState("");
-  const [icon, setIcon] = useState("folder");
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
   const nameInput = useRef(null);
@@ -26,7 +24,7 @@ export default function CreateProjectForm({ className, title = "New project", on
     e.preventDefault();
     if (!name.trim()) return;
     startTransition(async () => {
-      const res = await createProject({ name, icon });
+      const res = await createProject({ name });
       if (res?.error) setError(res.error);
       else onCreated?.(res.id);
     });
@@ -47,7 +45,7 @@ export default function CreateProjectForm({ className, title = "New project", on
 
       <div className={styles.nameRow}>
         <span className={styles.previewMark}>
-          <ProjectIcon icon={icon} />
+          <ProjectIcon />
         </span>
         <input
           ref={nameInput}
@@ -59,10 +57,6 @@ export default function CreateProjectForm({ className, title = "New project", on
           maxLength={40}
           autoComplete="off"
         />
-      </div>
-
-      <div className={styles.pickerWrap}>
-        <IconPicker value={icon} onChange={setIcon} rows={3} />
       </div>
 
       {error && <p className={styles.error}>{error}</p>}

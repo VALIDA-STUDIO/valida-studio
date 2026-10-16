@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import IconPicker from "../../../IconPicker";
 import { updateProject, deleteProject } from "../../../projects/actions";
 import s from "../../settings/settings.module.css";
 import f from "../../../ProjectSwitcher.module.css";
@@ -12,14 +11,12 @@ const CONFIRM_WORD = "DELETE";
 export default function ProjectSettings({ project }) {
   const router = useRouter();
   const [name, setName] = useState(project.name);
-  const [icon, setIcon] = useState(project.icon);
   const [typed, setTyped] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [msg, setMsg] = useState({});
   const [pending, startTransition] = useTransition();
 
   const nameDirty = name.trim() !== project.name && name.trim();
-  const iconDirty = icon !== project.icon;
   const ready = typed.trim().toUpperCase() === CONFIRM_WORD;
 
   const save = (patch, key) =>
@@ -82,25 +79,6 @@ export default function ProjectSettings({ project }) {
               </button>
             </div>
           </form>
-
-          {/* ---------- icon ---------- */}
-          <section className={s.card}>
-            <div className={s.cardBody}>
-              <div className={s.cardText}>
-                <h3 className={s.cardTitle}>Icon</h3>
-                <p className={s.cardDesc}>Pick the symbol shown next to the project name.</p>
-                <div className={s.pickerWide}>
-                  <IconPicker value={icon} onChange={setIcon} rows={4} />
-                </div>
-              </div>
-            </div>
-            <div className={s.cardFoot}>
-              <span className={msg.icon && msg.icon !== "Saved" ? s.error : s.footText}>{msg.icon ?? ""}</span>
-              <button className={s.btnPrimary} type="button" disabled={!iconDirty || pending} onClick={() => save({ icon }, "icon")}>
-                Save
-              </button>
-            </div>
-          </section>
         </section>
 
         {/* ---------- danger ---------- */}

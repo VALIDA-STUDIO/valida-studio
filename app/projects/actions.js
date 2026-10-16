@@ -3,7 +3,6 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { ICON_NAMES } from "../ProjectIcon";
 
 const ACTIVE_COOKIE = "valida.activeProject";
 const YEAR = 60 * 60 * 24 * 365;
@@ -14,10 +13,9 @@ export async function setActiveProject(id) {
   revalidatePath("/", "layout");
 }
 
-export async function createProject({ name, icon }) {
+export async function createProject({ name }) {
   const cleanName = String(name ?? "").trim().slice(0, 40);
   if (!cleanName) return { error: "Name is required" };
-  const cleanIcon = ICON_NAMES.includes(icon) ? icon : "folder";
 
   const supabase = await createClient();
   const {
@@ -27,7 +25,7 @@ export async function createProject({ name, icon }) {
 
   const { data, error } = await supabase
     .from("projects")
-    .insert({ owner: user.id, name: cleanName, icon: cleanIcon })
+    .insert({ owner: user.id, name: cleanName })
     .select("id")
     .single();
   if (error) return { error: error.message };
@@ -36,14 +34,13 @@ export async function createProject({ name, icon }) {
   return { id: data.id };
 }
 
-export async function updateProject({ id, name, icon }) {
+export async function updateProject({ id, name }) {
   const patch = {};
   if (name !== undefined) {
     const cleanName = String(name).trim().slice(0, 40);
     if (!cleanName) return { error: "Name is required" };
     patch.name = cleanName;
   }
-  if (icon !== undefined) patch.icon = ICON_NAMES.includes(icon) ? icon : "folder";
 
   const supabase = await createClient();
   const { error } = await supabase.from("projects").update(patch).eq("id", String(id));

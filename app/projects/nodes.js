@@ -66,26 +66,3 @@ export async function deleteNode(id) {
   revalidatePath("/", "layout");
   return { ok: true };
 }
-
-// Node-editor graph of one file (nodes + edges as React Flow JSON)
-export async function saveGraph({ id, graph }) {
-  const json = JSON.stringify(graph ?? {});
-  if (json.length > 200_000) return { error: "Graph too large" };
-
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("project_nodes")
-    .update({ graph })
-    .eq("id", String(id))
-    .eq("kind", "file")
-    .select("id");
-  if (error) {
-    console.error("saveGraph failed:", error.message);
-    return { error: error.message };
-  }
-  if (!data?.length) {
-    console.error("saveGraph: no row updated for", id);
-    return { error: "File not found" };
-  }
-  return { ok: true };
-}
