@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import UserMenu from "./UserMenu";
 import Topbar from "./Topbar";
+import SidebarNav from "./SidebarNav";
 import styles from "./Shell.module.css";
 
 // Loads the signed-in user, or sends the visitor straight to Discord.
@@ -35,29 +36,16 @@ export const getPlan = cache(async () => {
   return value === "premium" ? "premium" : "default";
 });
 
-// A new account starts with a few example projects so the switcher isn't empty.
-const EXAMPLE_PROJECTS = [
-  { name: "Welcome Messages", icon: "layout" },
-  { name: "Teleport Pads", icon: "globe" },
-  { name: "Chat Filter", icon: "wrench" },
-];
-
 export const getProjects = cache(async () => {
-  const { user } = await requireUser();
+  await requireUser();
   const supabase = await createClient();
 
-  let { data: projects, error } = await supabase
+  const { data, error } = await supabase
     .from("projects")
     .select("id, name, icon")
     .order("created_at", { ascending: true });
-
-  // First visit: seed examples. The DB function takes a per-user lock so two
-  // parallel requests can't both seed.
-  if (!error && !projects?.length) {
-    const { data: seeded } = await supabase.rpc("seed_example_projects", { examples: EXAMPLE_PROJECTS });
-    projects = seeded ?? [];
-  }
   if (error) console.error("projects query failed:", error.message);
+  const projects = data ?? [];
 
   const wanted = (await cookies()).get("valida.activeProject")?.value;
   const activeId = projects.some((p) => p.id === wanted) ? wanted : projects[0]?.id ?? null;
@@ -79,6 +67,7 @@ export default async function Shell({ children }) {
           <span className={styles.logo} aria-hidden="true" />
           <span className={styles.brandName}>Valida Studio</span>
         </div>
+        <SidebarNav hasProject={projects.length > 0} />
         <div className={styles.spacer} />
         <UserMenu name={name} avatar={avatar} plan={plan} />
       </aside>

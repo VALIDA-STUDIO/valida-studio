@@ -6,12 +6,13 @@ import ProjectSwitcher from "./ProjectSwitcher";
 import styles from "./Topbar.module.css";
 
 const LABELS = {
-  "/": "Dashboard",
+  "/": "Project Canvas",
   "/settings": "Settings",
+  "/project/settings": "Project Settings",
 };
 
 // Account-level pages (settings) have no project context, so no switcher there.
-const PROJECT_PAGES = new Set(["/"]);
+const PROJECT_PAGES = new Set(["/", "/project/settings"]);
 
 // Vercel-style slash between breadcrumb items
 const Sep = () => (
