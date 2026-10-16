@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import Link from "next/link";
 import { createNode, renameNode, deleteNode } from "./projects/nodes";
 import styles from "./FileTree.module.css";
 
@@ -105,9 +106,9 @@ function NameInput({ initial, placeholder, onCommit, onCancel }) {
   );
 }
 
-export default function FileTree({ projectId, nodes }) {
+export default function FileTree({ projectId, nodes, root }) {
   const storageKey = `valida.tree.${projectId}`;
-  const [expanded, setExpanded] = useState(() => new Set());
+  const [expanded, setExpanded] = useState(() => new Set(["root"]));
   const [editing, setEditing] = useState(null); // { mode: "create", parentId, kind } | { mode: "rename", id } | { mode: "delete", id }
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState("");
@@ -116,7 +117,8 @@ export default function FileTree({ projectId, nodes }) {
   // remember open folders per project on this device
   useEffect(() => {
     try {
-      setExpanded(new Set(JSON.parse(localStorage.getItem(storageKey) ?? "[]")));
+      const saved = localStorage.getItem(storageKey);
+      if (saved) setExpanded(new Set(JSON.parse(saved)));
     } catch {}
   }, [storageKey]);
   const toggle = (id) => {
@@ -161,7 +163,7 @@ export default function FileTree({ projectId, nodes }) {
     });
 
   const startCreate = (parentId, kind) => {
-    if (parentId) open(parentId);
+    open(parentId ?? "root");
     setError("");
     setEditing({ mode: "create", parentId, kind });
   };
@@ -169,7 +171,7 @@ export default function FileTree({ projectId, nodes }) {
   const renderRow = (n, depth) => {
     const isFolder = n.kind === "folder";
     const isOpen = isFolder && expanded.has(n.id);
-    const indent = { paddingLeft: 8 + depth * 14 };
+    const indent = undefined;
 
     if (editing?.mode === "rename" && editing.id === n.id) {
       return (
@@ -260,10 +262,10 @@ export default function FileTree({ projectId, nodes }) {
     const list = children.get(parentKey) ?? [];
     const creating = editing?.mode === "create" && (editing.parentId ?? "root") === parentKey;
     return (
-      <>
+      <div className={styles.children} role="group">
         {list.map((n) => renderRow(n, depth))}
         {creating && (
-          <div className={styles.row} style={{ paddingLeft: 8 + depth * 14 }}>
+          <div className={styles.row}>
             <span className={styles.caret} />
             <span className={styles.kind}>{editing.kind === "folder" ? <FolderIcon /> : <FileIcon />}</span>
             <NameInput
@@ -279,17 +281,32 @@ export default function FileTree({ projectId, nodes }) {
             />
           </div>
         )}
-      </>
+        {parentKey === "root" && !list.length && !creating && <p className={styles.empty}>No files yet</p>}
+      </div>
     );
   };
 
-  const empty = !nodes.length && editing?.mode !== "create";
+  const rootOpen = expanded.has("root");
 
   return (
     <div className={styles.tree} data-pending={pending || undefined}>
-      <div className={styles.head}>
-        <span className={styles.headLabel}>Files</span>
-        <span className={styles.headActions}>
+      {/* root row: fold chevron + page link + root actions */}
+      <div className={`${styles.row} ${styles.rootRow}`} data-active={root.active || undefined}>
+        <button
+          className={styles.caret}
+          data-open={rootOpen || undefined}
+          type="button"
+          aria-label={rootOpen ? "Collapse files" : "Expand files"}
+          aria-expanded={rootOpen}
+          onClick={() => toggle("root")}
+        >
+          <ChevronIcon />
+        </button>
+        <Link href={root.href} className={styles.rootLink} aria-current={root.active ? "page" : undefined}>
+          <span className={styles.rootIcon}>{root.icon}</span>
+          <span className={styles.name}>{root.label}</span>
+        </Link>
+        <span className={styles.actions}>
           <button className={styles.action} type="button" title="New file" aria-label="New file" onClick={() => startCreate(null, "file")}>
             <FilePlusIcon />
           </button>
@@ -299,11 +316,12 @@ export default function FileTree({ projectId, nodes }) {
         </span>
       </div>
 
-      <div role="tree" aria-label="Project files">
-        {renderChildren("root", 0)}
-      </div>
+      {rootOpen && (
+        <div role="tree" aria-label="Project files">
+          {renderChildren("root", 0)}
+        </div>
+      )}
 
-      {empty && <p className={styles.empty}>No files yet.</p>}
       {error && <p className={styles.error}>{error}</p>}
     </div>
   );

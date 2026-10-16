@@ -35,6 +35,7 @@ export default function SidebarNav({ project, nodes }) {
     const active = pathname === href;
     return (
       <Link key={href} href={href} className={styles.item} data-active={active || undefined} aria-current={active ? "page" : undefined}>
+        <span className={styles.caretSlot} aria-hidden="true" />
         <span className={styles.icon}>
           <Icon />
         </span>
@@ -45,10 +46,11 @@ export default function SidebarNav({ project, nodes }) {
 
   return (
     <nav className={styles.nav} aria-label="Project">
-      {link(items[0])}
-      <div className={styles.treeWrap}>
-        <FileTree projectId={project.id} nodes={nodes} />
-      </div>
+      <FileTree
+        projectId={project.id}
+        nodes={nodes}
+        root={{ href: "/", label: "Project Canvas", icon: <CanvasIcon />, active: pathname === "/" }}
+      />
       {link(items[1])}
     </nav>
   );

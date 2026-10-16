@@ -7,27 +7,57 @@
   opacity: 0.7;
 }
 
-/* ---------- "Files" header with root actions ---------- */
+/* ---------- root row (Project Canvas) ---------- */
 
-.head {
+/* .row.rootRow: beats the generic .row rule so the root matches the Project Settings item exactly */
+.row.rootRow {
+  height: 38px;
+  padding: 0 9px 0 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: default;
+}
+
+.row.rootRow:hover {
+  background: var(--surface-hover);
+}
+
+.row.rootRow[data-active] {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.rootLink {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 28px;
-  padding: 0 6px 0 10px;
-}
-
-.headLabel {
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   color: var(--muted);
+  transition: color 0.12s;
 }
 
-.headActions {
-  display: inline-flex;
-  gap: 2px;
+.rootRow:hover .rootLink,
+.rootRow[data-active] .rootLink {
+  color: var(--fg);
+}
+
+.rootIcon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* nested levels: indent + a thin guide line under the parent's chevron */
+.children {
+  margin-left: 13px;
+  padding-left: 9px;
+  border-left: 1px solid var(--border);
 }
 
 /* ---------- rows ---------- */
@@ -38,7 +68,7 @@
   align-items: center;
   gap: 6px;
   height: 30px;
-  padding-right: 6px;
+  padding: 0 6px 0 2px;
   border-radius: 6px;
   font-size: 13.5px;
   color: var(--fg);
@@ -60,11 +90,19 @@
 .caret {
   display: grid;
   place-items: center;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  background: transparent;
   flex-shrink: 0;
   color: var(--muted);
-  transition: transform 0.15s;
+  cursor: pointer;
+  transition: transform 0.15s, color 0.12s;
+}
+
+.caret:hover {
+  color: var(--fg);
 }
 
 .caret[data-open] {
@@ -87,18 +125,26 @@
   white-space: nowrap;
 }
 
-/* hover-revealed row actions */
+/* hover-revealed row actions: overlaid on the right edge so names keep the full width */
 .actions {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  bottom: 0;
   display: inline-flex;
+  align-items: center;
   gap: 1px;
-  flex-shrink: 0;
+  padding-left: 10px;
+  background: linear-gradient(90deg, transparent, var(--surface-hover) 10px);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.12s;
 }
 
 .row:hover .actions,
 .row:focus-within .actions {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .action {
@@ -169,7 +215,7 @@
 }
 
 .empty {
-  padding: 4px 10px 6px;
+  padding: 6px 8px;
   font-size: 12.5px;
   color: var(--muted);
 }
