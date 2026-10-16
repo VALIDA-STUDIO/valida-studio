@@ -106,7 +106,7 @@
   gap: 12px;
   min-width: 0;
   min-height: 52px;
-  padding: 8px 44px 8px 16px;
+  padding: 8px 16px;
   color: var(--fg);
   transition: background 0.12s;
 }
@@ -137,6 +137,7 @@
   flex-direction: column;
   gap: 1px;
   min-width: 0;
+  padding-right: 40px; /* room for the trash button */
 }
 
 .rowDesc {
@@ -169,11 +170,11 @@
   transform: translateX(2px);
 }
 
-/* trash sits over the row's right edge, shown on hover */
+/* trash sits left of the chevron, shown on hover */
 .rowDelete {
   position: absolute;
   top: 50%;
-  right: 40px;
+  right: 44px;
   display: grid;
   place-items: center;
   width: 28px;
