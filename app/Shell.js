@@ -4,7 +4,7 @@ import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import UserMenu from "./UserMenu";
-import ProjectsNav from "./ProjectsNav";
+import SearchBar from "./SearchBar";
 import Topbar from "./Topbar";
 import styles from "./Shell.module.css";
 
@@ -41,7 +41,7 @@ export const getProjects = cache(async () => {
   return { projects, activeId };
 });
 
-// Sidebar (logo, project chip, profile chip) + top bar with the breadcrumb and project switcher.
+// Sidebar (logo, search, profile chip) + top bar with the breadcrumb and project switcher.
 export default async function Shell({ children }) {
   const [{ name, avatar }, plan, { projects, activeId }] = await Promise.all([requireUser(), getPlan(), getProjects()]);
 
@@ -54,7 +54,7 @@ export default async function Shell({ children }) {
           <span className={styles.beta}>Beta</span>
         </div>
         <div className={styles.navArea}>
-          <ProjectsNav projects={projects} activeId={activeId} />
+          <SearchBar />
         </div>
         <UserMenu name={name} avatar={avatar} plan={plan} />
       </aside>
