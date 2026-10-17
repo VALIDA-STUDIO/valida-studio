@@ -56,35 +56,111 @@
   color: var(--muted);
 }
 
-/* kind filter: equal segments, selected one is a solid inset pill */
-.seg {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-  padding: 2px;
-  border: 1px solid var(--border);
+/* kind filter dropdown: same field look as the search, menu opens below */
+.dropdown {
+  position: relative;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 34px;
+  padding: 0 8px 0 10px;
   border-radius: 8px;
-}
-
-.segItem {
-  height: 26px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--muted);
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--fg);
   font: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
+  font-size: 13px;
+  text-align: left;
   cursor: pointer;
-  transition: color 0.12s, background 0.12s;
+  transition: border-color 0.12s, background 0.12s;
 }
 
-.segItem:hover {
+.trigger:hover,
+.trigger[data-open] {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+
+.triggerLabel {
+  color: var(--muted);
+}
+
+.triggerValue {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+}
+
+.chevron {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.12s;
+}
+
+.trigger:hover .chevron,
+.trigger[data-open] .chevron {
   color: var(--fg);
 }
 
-.segItem[data-on] {
-  color: var(--bg);
-  background: var(--fg);
+.trigger[data-open] .chevron {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  animation: fade 0.12s ease-out;
+  z-index: 10;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.item:hover,
+.item[data-on] {
+  background: var(--surface-hover);
+}
+
+.check {
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  color: var(--fg);
 }
