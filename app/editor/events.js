@@ -1,16 +1,24 @@
-// Events an Event node can listen to. `paper` is the event class, `outputs` what the event hands over.
+// Events an Event node can listen to. `paper` is the event class, `outputs` the variables it provides.
 export const EVENTS = {
-  pre_player_attack_entity: {
-    id: "pre_player_attack_entity",
-    label: "Player attacks entity",
-    paper: "PrePlayerAttackEntityEvent",
-    cancellable: true,
+  player_join: {
+    id: "player_join",
+    label: "Player joins",
+    paper: "PlayerJoinEvent",
     outputs: [
       { id: "player", label: "player" },
-      { id: "attacked", label: "attacked" },
-      { id: "willAttack", label: "will attack" },
+      { id: "joinMessage", label: "join message" },
+    ],
+  },
+  player_quit: {
+    id: "player_quit",
+    label: "Player leaves",
+    paper: "PlayerQuitEvent",
+    outputs: [
+      { id: "player", label: "player" },
+      { id: "quitMessage", label: "quit message" },
+      { id: "reason", label: "reason" },
     ],
   },
 };
 
-export const DEFAULT_EVENT = "pre_player_attack_entity";
+export const DEFAULT_EVENT = "player_join";
