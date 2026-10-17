@@ -57,7 +57,7 @@ export default function ProjectSettings({ project }) {
             <div className={s.cardBody}>
               <div className={s.cardText}>
                 <h3 className={s.cardTitle}>Project name</h3>
-                <p className={s.cardDesc}>Shown in the project switcher and used for the plugin ID.</p>
+                <p className={s.cardDesc}>Shown in the project switcher.</p>
                 <input
                   className={`${f.input} ${s.fieldInput}`}
                   type="text"
@@ -70,7 +70,7 @@ export default function ProjectSettings({ project }) {
               </div>
             </div>
             <div className={s.cardFoot}>
-              <span className={msg.name && msg.name !== "Saved" ? s.error : s.footText}>{msg.name ?? "Up to 40 characters."}</span>
+              <span className={msg.name && msg.name !== "Saved" ? s.error : s.footText}>{msg.name ?? ""}</span>
               <button className={s.btnPrimary} type="submit" disabled={!nameDirty || pending}>
                 Save
               </button>
@@ -90,14 +90,14 @@ export default function ProjectSettings({ project }) {
             <div className={s.cardBody}>
               <div className={s.cardText}>
                 <h3 className={s.cardTitle}>Delete project</h3>
-                <p className={s.cardDesc}>Permanently remove this project and everything in it. This action is not reversible.</p>
+                <p className={s.cardDesc}>Removes the project and everything in it.</p>
               </div>
             </div>
             <div className={s.cardFoot}>
               {confirm ? (
                 <div className={s.confirm}>
                   <span className={s.footText}>
-                    Delete <strong>{project.name}</strong>? This cannot be undone.
+                    Delete <strong>{project.name}</strong>?
                   </span>
                   <button className={s.btn} type="button" onClick={() => setConfirm(false)} disabled={pending} autoFocus>
                     Cancel

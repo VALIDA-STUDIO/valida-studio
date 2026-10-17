@@ -91,9 +91,9 @@ export default function PluginConfig({ project }) {
 
           <Card
             {...card("plugin", ["name", "version", "description", "prefix", "authors", "website"])}
-            title="Plugin information"
-            desc="What servers and players see about the plugin."
-            hint="Name and log prefix fall back to the project name."
+            title="Plugin info"
+            desc="Shown on the server and in the plugin list."
+            hint=""
           >
             <div className={c.grid}>
               <label className={c.field}>
@@ -112,7 +112,7 @@ export default function PluginConfig({ project }) {
                 className={c.textarea}
                 value={cfg.description}
                 onChange={(e) => set("description")(e.target.value)}
-                placeholder="Welcomes players and keeps the lobby tidy."
+                placeholder="What does the plugin do?"
                 maxLength={200}
                 rows={2}
               />
@@ -131,7 +131,7 @@ export default function PluginConfig({ project }) {
 
             <div className={c.field}>
               <span className={c.fieldLabel}>Authors</span>
-              <ChipsInput value={cfg.authors} onChange={set("authors")} placeholder="Add an author, then press Enter" max={10} label="Authors" />
+              <ChipsInput value={cfg.authors} onChange={set("authors")} placeholder="Add a name" max={10} label="Authors" />
             </div>
           </Card>
         </section>
@@ -141,10 +141,10 @@ export default function PluginConfig({ project }) {
             <h2>Dependencies</h2>
           </div>
 
-          <Card {...card("dependencies", ["depend", "softdepend"])} title="Other plugins" desc="Plugins this plugin needs or can work with." hint="Press Enter after each plugin name.">
-            <span className={c.depLabel}>Required — the plugin will not load without these</span>
+          <Card {...card("dependencies", ["depend", "softdepend"])} title="Other plugins" desc="Plugins this one depends on." hint="">
+            <span className={c.depLabel}>Required</span>
             <ChipsInput value={cfg.depend} onChange={set("depend")} placeholder="Vault" max={20} label="Required plugins" />
-            <span className={c.depLabel}>Optional — used when they are installed</span>
+            <span className={c.depLabel}>Optional</span>
             <ChipsInput value={cfg.softdepend} onChange={set("softdepend")} placeholder="PlaceholderAPI" max={20} label="Optional plugins" />
           </Card>
         </section>
