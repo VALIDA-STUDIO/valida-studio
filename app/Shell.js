@@ -36,6 +36,7 @@ export default async function Shell({ children }) {
         <div className={styles.brand}>
           <span className={styles.logo} aria-hidden="true" />
           <span className={styles.brandName}>Valida Studio</span>
+          <span className={styles.beta}>Beta</span>
         </div>
         <div className={styles.navArea} />
         <UserMenu name={name} avatar={avatar} plan={plan} />
