@@ -201,44 +201,49 @@
 }
 
 
-/* name field inside the command node */
-.nodeInput {
+/* event picker inside the node */
+.nodeSelect {
   width: 100%;
-  height: 30px;
-  padding: 0 8px 0 20px;
+  height: 32px;
+  padding: 0 28px 0 9px;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 14px;
+  font: inherit;
+  font-size: 13px;
   font-weight: 600;
   outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
   transition: border-color 0.12s;
 }
 
-.nodeInput:focus {
+.nodeSelect:hover,
+.nodeSelect:focus {
   border-color: var(--fg);
 }
 
-.nodeInput::placeholder {
-  color: var(--border-strong);
-  font-weight: 500;
-}
-
-.nodeField {
-  position: relative;
-}
-
-.nodeSlash {
-  position: absolute;
-  left: 9px;
-  top: 50%;
-  transform: translateY(-50%);
+/* the Paper event class under the picker */
+.nodeMono {
+  margin-top: 2px;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 14px;
+  font-size: 11px;
   color: var(--muted);
-  pointer-events: none;
+}
+
+/* flow output is bolder; data outputs use a hollow handle */
+.nodeOutput[data-flow] {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.handleData {
+  background: var(--bg);
+  border-style: dashed;
 }
 
 /* drop hint while dragging a block over the canvas */

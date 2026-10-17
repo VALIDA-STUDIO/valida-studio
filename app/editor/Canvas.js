@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, useNodesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import CommandNode from "./CommandNode";
+import EventNode from "./EventNode";
+import { DEFAULT_EVENT } from "./events";
 import { ADD_EVENT, DRAG_TYPE } from "./blocks";
 import styles from "./editor.module.css";
 
-const nodeTypes = { command: CommandNode };
+const nodeTypes = { event: EventNode };
 const deleteKeys = ["Backspace", "Delete"];
 const newId = () => "n_" + Math.random().toString(36).slice(2, 8);
 
@@ -19,7 +20,7 @@ function Flow() {
   const add = useCallback(
     (type, position) => {
       const id = newId();
-      setNodes((ns) => ns.map((n) => ({ ...n, selected: false })).concat({ id, type, position, data: { name: "" }, selected: true }));
+      setNodes((ns) => ns.map((n) => ({ ...n, selected: false })).concat({ id, type, position, data: { event: DEFAULT_EVENT }, selected: true }));
     },
     [setNodes]
   );
