@@ -1,9 +1,15 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
 .search {
   display: flex;
   align-items: center;
   gap: 8px;
   height: 36px;
-  margin-top: 14px;
   padding: 0 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -48,4 +54,37 @@
   font-family: inherit;
   font-size: 11px;
   color: var(--muted);
+}
+
+/* kind filter: equal segments, selected one is a solid inset pill */
+.seg {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.segItem {
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+
+.segItem:hover {
+  color: var(--fg);
+}
+
+.segItem[data-on] {
+  color: var(--bg);
+  background: var(--fg);
 }
