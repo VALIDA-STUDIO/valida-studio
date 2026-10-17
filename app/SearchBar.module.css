@@ -64,7 +64,7 @@
 .trigger {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
   height: 34px;
   padding: 0 8px 0 10px;
@@ -85,8 +85,21 @@
   background: var(--surface-hover);
 }
 
-.triggerLabel {
+/* icon slot shared by the trigger and the menu rows */
+.icon {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  flex-shrink: 0;
   color: var(--muted);
+  transition: color 0.12s;
+}
+
+.trigger:hover .icon,
+.trigger[data-open] .icon,
+.item:hover .icon,
+.item[data-on] .icon {
+  color: var(--fg);
 }
 
 .triggerValue {
@@ -138,6 +151,7 @@
 .item {
   display: flex;
   align-items: center;
+  gap: 8px;
   width: 100%;
   height: 32px;
   padding: 0 10px;
