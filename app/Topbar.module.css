@@ -153,7 +153,14 @@
 .sep {
   display: grid;
   place-items: center;
+  width: 14px;
+  margin: 0 1px;
   color: var(--border-strong);
+}
+
+.sep svg {
+  width: 14px;
+  height: 14px;
 }
 
 .current {
