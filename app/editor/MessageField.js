@@ -12,7 +12,7 @@ const PaletteIcon = () => (
 
 const TAG = /<#([0-9a-fA-F]{6})>/g;
 
-// The text split into coloured runs; tags stay visible but dimmed, text after a tag takes its colour.
+// The text split into runs; only the <#hex> tag itself is shown in its colour, the text stays normal.
 function runs(text) {
   const out = [];
   let color = null;
@@ -27,7 +27,7 @@ function runs(text) {
   return out;
 }
 
-// Message field with Minecraft colours: <#ff5555> tags colour the text right in the field.
+// Message field with Minecraft colours: each <#ff5555> tag is painted in its own colour right in the field.
 // The palette button inserts a tag at the cursor; the field can be resized in both directions.
 export default function MessageField({ value, onChange, placeholder, dataKey, onFocus, area = true, label }) {
   const field = useRef(null);
@@ -72,7 +72,7 @@ export default function MessageField({ value, onChange, placeholder, dataKey, on
       {/* painted copy of the text behind the transparent field */}
       <div ref={backdrop} className={styles.msgBackdrop} aria-hidden="true">
         {runs(text).map((r, i) => (
-          <span key={i} className={r.tag ? styles.msgTag : undefined} style={r.color && !r.tag ? { color: r.color } : undefined}>
+          <span key={i} className={r.tag ? styles.msgTag : undefined} style={r.tag ? { color: r.color } : undefined}>
             {r.text}
           </span>
         ))}
