@@ -33,7 +33,7 @@ export const getPlan = cache(async () => {
 export const getProjects = cache(async () => {
   await requireUser();
   const supabase = await createClient();
-  const { data, error } = await supabase.from("projects").select("id, name").order("created_at", { ascending: true });
+  const { data, error } = await supabase.from("projects").select("id, name, config").order("created_at", { ascending: true });
   if (error) console.error("projects query failed:", error.message);
   const projects = data ?? [];
   const wanted = (await cookies()).get("valida.activeProject")?.value;
