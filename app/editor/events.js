@@ -5,8 +5,8 @@ export const EVENTS = {
     label: "Player joins",
     paper: "PlayerJoinEvent",
     outputs: [
-      { id: "player", label: "player" },
-      { id: "joinMessage", label: "join message" },
+      { id: "player", label: "player", type: "Player" },
+      { id: "joinMessage", label: "join message", type: "String" },
     ],
   },
   player_quit: {
@@ -14,9 +14,9 @@ export const EVENTS = {
     label: "Player leaves",
     paper: "PlayerQuitEvent",
     outputs: [
-      { id: "player", label: "player" },
-      { id: "quitMessage", label: "quit message" },
-      { id: "reason", label: "reason" },
+      { id: "player", label: "player", type: "Player" },
+      { id: "quitMessage", label: "quit message", type: "String" },
+      { id: "reason", label: "reason", type: "String" },
     ],
   },
 };

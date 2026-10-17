@@ -3,6 +3,7 @@
 import { memo, useRef } from "react";
 import { Handle, Position, useReactFlow, useNodeConnections, useNodesData } from "@xyflow/react";
 import { EVENTS } from "./events";
+import VarChips from "./VarChips";
 import styles from "./editor.module.css";
 
 const MegaphoneIcon = () => (
@@ -22,17 +23,17 @@ function BroadcastNode({ id, data, selected }) {
   const sources = useNodesData(incoming.map((c) => c.source));
   const vars = sources.flatMap((n) => (n?.type === "event" ? (EVENTS[n.data?.event]?.outputs ?? []) : []));
 
-  const insert = (name) => {
+  // put {path} where the cursor is
+  const insert = (path) => {
     const el = field.current;
     const text = data.message ?? "";
     const start = el?.selectionStart ?? text.length;
     const end = el?.selectionEnd ?? text.length;
-    const next = text.slice(0, start) + `{${name}}` + text.slice(end);
-    updateNodeData(id, { message: next });
+    const token = `{${path}}`;
+    updateNodeData(id, { message: text.slice(0, start) + token + text.slice(end) });
     requestAnimationFrame(() => {
       el?.focus();
-      const pos = start + name.length + 2;
-      el?.setSelectionRange(pos, pos);
+      el?.setSelectionRange(start + token.length, start + token.length);
     });
   };
 
@@ -60,15 +61,7 @@ function BroadcastNode({ id, data, selected }) {
           rows={2}
           spellCheck={false}
         />
-        {vars.length > 0 && (
-          <div className={styles.vars}>
-            {vars.map((v) => (
-              <button key={v.id} className={`${styles.var} ${styles.varBtn} nodrag`} type="button" onClick={() => insert(v.id)} title="Insert">
-                {`{${v.id}}`}
-              </button>
-            ))}
-          </div>
-        )}
+        {vars.length > 0 && <VarChips vars={vars} onInsert={insert} />}
       </div>
       <div className={styles.nodeOutputs}>
         <div className={styles.nodeOutput} data-flow="">

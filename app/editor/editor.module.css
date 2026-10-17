@@ -361,3 +361,145 @@
   border-color: var(--fg);
   background: var(--surface-hover);
 }
+
+/* ---------- variable property menu ---------- */
+
+.vars {
+  position: relative;
+}
+
+.varBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.varBtn[data-open] {
+  border-color: var(--fg);
+  background: var(--surface-hover);
+}
+
+.varMenu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  min-width: 230px;
+  padding: 4px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  z-index: 20;
+}
+
+.varMenuHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px 7px;
+}
+
+.varBack {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: -4px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.varBack:hover {
+  color: var(--fg);
+  background: var(--surface-hover);
+}
+
+.varPath {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.varType {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.varSep {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--border);
+}
+
+.varRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.varItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.varItem:hover {
+  background: var(--surface-hover);
+}
+
+.varItem svg {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+.varItem .varType {
+  margin-left: auto;
+}
+
+.varItem .varType + svg {
+  margin-left: 0;
+}
+
+.varKey {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.varArg {
+  width: 44px;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+}
+
+.varArg:focus {
+  border-color: var(--fg);
+}
