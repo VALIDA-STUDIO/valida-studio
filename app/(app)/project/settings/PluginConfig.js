@@ -71,6 +71,17 @@ export default function PluginConfig({ project }) {
   // props every card needs: its dirty state, status message and save handler
   const card = (id, keys = [id]) => ({ dirty: dirty(...keys), pending, msg: msg[id], onSave: () => save(id) });
 
+  const input = (key, extra = {}) => (
+    <input
+      className={`${f.input} ${c.inputWide}`}
+      type="text"
+      value={cfg[key]}
+      onChange={(e) => set(key)(e.target.value)}
+      autoComplete="off"
+      {...extra}
+    />
+  );
+
   return (
     <>
         <section className={s.group}>
@@ -78,81 +89,50 @@ export default function PluginConfig({ project }) {
             <h2>Plugin</h2>
           </div>
 
-          <Card {...card("name")} title="Name" desc="The name of the plugin as servers will see it." hint="Leave empty to use the project name.">
-            <input
-              className={`${f.input} ${s.fieldInput}`}
-              type="text"
-              value={cfg.name}
-              onChange={(e) => set("name")(e.target.value)}
-              placeholder={project.name}
-              maxLength={40}
-              autoComplete="off"
-              aria-label="Plugin name"
-            />
-          </Card>
+          <Card
+            {...card("plugin", ["name", "version", "description", "prefix", "authors", "website"])}
+            title="Plugin information"
+            desc="What servers and players see about the plugin."
+            hint="Name and log prefix fall back to the project name."
+          >
+            <div className={c.grid}>
+              <label className={c.field}>
+                <span className={c.fieldLabel}>Name</span>
+                {input("name", { placeholder: project.name, maxLength: 40 })}
+              </label>
+              <label className={c.field}>
+                <span className={c.fieldLabel}>Version</span>
+                {input("version", { placeholder: "1.0.0", maxLength: 20, spellCheck: false })}
+              </label>
+            </div>
 
-          <Card {...card("version")} title="Version" desc="The version number of the plugin." hint="Letters, numbers, dots and dashes.">
-            <input
-              className={`${f.input} ${s.fieldInput}`}
-              type="text"
-              value={cfg.version}
-              onChange={(e) => set("version")(e.target.value)}
-              placeholder="1.0.0"
-              maxLength={20}
-              autoComplete="off"
-              spellCheck={false}
-              aria-label="Version"
-            />
-          </Card>
+            <label className={c.field}>
+              <span className={c.fieldLabel}>Description</span>
+              <textarea
+                className={c.textarea}
+                value={cfg.description}
+                onChange={(e) => set("description")(e.target.value)}
+                placeholder="Welcomes players and keeps the lobby tidy."
+                maxLength={200}
+                rows={2}
+              />
+            </label>
 
-          <Card {...card("description")} title="Description" desc="A short summary of what the plugin does." hint="Up to 200 characters.">
-            <textarea
-              className={c.textarea}
-              value={cfg.description}
-              onChange={(e) => set("description")(e.target.value)}
-              placeholder="Welcomes players and keeps the lobby tidy."
-              maxLength={200}
-              rows={2}
-              aria-label="Description"
-            />
-          </Card>
+            <div className={c.grid}>
+              <label className={c.field}>
+                <span className={c.fieldLabel}>Log prefix</span>
+                {input("prefix", { placeholder: cfg.name || project.name, maxLength: 40 })}
+              </label>
+              <label className={c.field}>
+                <span className={c.fieldLabel}>Website</span>
+                {input("website", { placeholder: "https://example.com", maxLength: 200, spellCheck: false, inputMode: "url" })}
+              </label>
+            </div>
 
-          <Card {...card("prefix")} title="Log prefix" desc="Shown in front of every line the plugin writes to the server console." hint="Leave empty to use the plugin name.">
-            <input
-              className={`${f.input} ${s.fieldInput}`}
-              type="text"
-              value={cfg.prefix}
-              onChange={(e) => set("prefix")(e.target.value)}
-              placeholder={cfg.name || project.name}
-              maxLength={40}
-              autoComplete="off"
-              aria-label="Log prefix"
-            />
-          </Card>
-        </section>
-
-        <section className={s.group}>
-          <div className={s.groupHead}>
-            <h2>People</h2>
-          </div>
-
-          <Card {...card("authors")} title="Authors" desc="Everyone who should be credited for the plugin." hint="Press Enter after each name.">
-            <ChipsInput value={cfg.authors} onChange={set("authors")} placeholder="Add an author" max={10} label="Authors" />
-          </Card>
-
-          <Card {...card("website")} title="Website" desc="Where players and server owners can find out more." hint="Optional. Must start with https://.">
-            <input
-              className={`${f.input} ${s.fieldInput} ${c.inputWide}`}
-              type="text"
-              inputMode="url"
-              value={cfg.website}
-              onChange={(e) => set("website")(e.target.value)}
-              placeholder="https://example.com"
-              maxLength={200}
-              autoComplete="off"
-              spellCheck={false}
-              aria-label="Website"
-            />
+            <div className={c.field}>
+              <span className={c.fieldLabel}>Authors</span>
+              <ChipsInput value={cfg.authors} onChange={set("authors")} placeholder="Add an author, then press Enter" max={10} label="Authors" />
+            </div>
           </Card>
         </section>
 
@@ -162,9 +142,9 @@ export default function PluginConfig({ project }) {
           </div>
 
           <Card {...card("dependencies", ["depend", "softdepend"])} title="Other plugins" desc="Plugins this plugin needs or can work with." hint="Press Enter after each plugin name.">
-            <span className={c.fieldLabel}>Required — the plugin will not load without these</span>
+            <span className={c.depLabel}>Required — the plugin will not load without these</span>
             <ChipsInput value={cfg.depend} onChange={set("depend")} placeholder="Vault" max={20} label="Required plugins" />
-            <span className={c.fieldLabel}>Optional — used when they are installed</span>
+            <span className={c.depLabel}>Optional — used when they are installed</span>
             <ChipsInput value={cfg.softdepend} onChange={set("softdepend")} placeholder="PlaceholderAPI" max={20} label="Optional plugins" />
           </Card>
         </section>
