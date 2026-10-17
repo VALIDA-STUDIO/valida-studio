@@ -11,6 +11,9 @@ import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
 
 const nodeTypes = { event: EventNode, broadcast: BroadcastNode };
+// kind of each node type, and the colour its connections get
+const KIND = { event: "event", broadcast: "action" };
+const KIND_COLOR = { event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
 const arrow = { animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];
 const fitViewOptions = { maxZoom: 1, padding: 0.3 };
@@ -77,6 +80,15 @@ function Flow({ projectId, initial }) {
     return () => window.removeEventListener(ADD_EVENT, onAdd);
   }, [add, nodes.length, screenToFlowPosition]);
 
+  // connections take the colour of the block they start from
+  const styledEdges = useMemo(() => {
+    const kindOf = new Map(nodes.map((n) => [n.id, KIND[n.type] ?? "action"]));
+    return edges.map((e) => {
+      const color = KIND_COLOR[kindOf.get(e.source)] ?? "var(--muted)";
+      return { ...e, style: { stroke: color }, markerEnd: { type: MarkerType.ArrowClosed, color } };
+    });
+  }, [nodes, edges]);
+
   // one connection per output, never into itself
   const isValidConnection = useCallback(
     (c) => c.source !== c.target && !edges.some((e) => e.source === c.source && (e.sourceHandle ?? null) === (c.sourceHandle ?? null)),
@@ -104,7 +116,7 @@ function Flow({ projectId, initial }) {
       className={styles.flow}
       data-over={over || undefined}
       nodes={nodes}
-      edges={edges}
+      edges={styledEdges}
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}

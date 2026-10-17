@@ -594,3 +594,40 @@
 .nodeBadge[data-kind="action"] {
   color: var(--kind-action);
 }
+
+/* the then row and its port take the kind colour too */
+.node[data-kind="event"] .nodeOutput[data-flow] {
+  color: var(--kind-event);
+}
+
+.node[data-kind="event"] .nodeOutput[data-flow] .handle {
+  border-color: var(--kind-event);
+}
+
+.node[data-kind="event"] .nodeOutput[data-flow] .handle:hover {
+  background: var(--kind-event);
+}
+
+.node[data-kind="condition"] .nodeOutput[data-flow] {
+  color: var(--kind-condition);
+}
+
+.node[data-kind="condition"] .nodeOutput[data-flow] .handle {
+  border-color: var(--kind-condition);
+}
+
+.node[data-kind="condition"] .nodeOutput[data-flow] .handle:hover {
+  background: var(--kind-condition);
+}
+
+.node[data-kind="action"] .nodeOutput[data-flow] {
+  color: var(--kind-action);
+}
+
+.node[data-kind="action"] .nodeOutput[data-flow] .handle {
+  border-color: var(--kind-action);
+}
+
+.node[data-kind="action"] .nodeOutput[data-flow] .handle:hover {
+  background: var(--kind-action);
+}
