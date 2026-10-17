@@ -999,7 +999,19 @@
   background: var(--bg) !important;
 }
 
-/* group nodes sit behind blocks */
+/* group nodes sit behind blocks; React Flow's own "group" look is turned off */
 .flow :global(.react-flow__node-group) {
   z-index: -1 !important;
+  padding: 0;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.flow :global(.react-flow__node-group.selected),
+.flow :global(.react-flow__node-group:focus),
+.flow :global(.react-flow__node-group:focus-visible) {
+  box-shadow: none;
+  outline: none;
 }
