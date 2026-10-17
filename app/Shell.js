@@ -18,9 +18,17 @@ export const requireUser = cache(async () => {
   return { user, name: m.custom_claims?.global_name ?? m.full_name ?? m.name ?? user.email, avatar: m.avatar_url };
 });
 
+// The user's plan (standard | pro | enterprise) from public.profiles; standard when missing.
+export const getPlan = cache(async () => {
+  const { user } = await requireUser();
+  const supabase = await createClient();
+  const { data } = await supabase.from("profiles").select("plan").eq("user_id", user.id).maybeSingle();
+  return data?.plan ?? "standard";
+});
+
 // Sidebar (logo + profile chip with logout) and an empty content area.
 export default async function Shell({ children }) {
-  const { name, avatar } = await requireUser();
+  const [{ name, avatar }, plan] = await Promise.all([requireUser(), getPlan()]);
 
   return (
     <div className={styles.shell}>
@@ -30,7 +38,7 @@ export default async function Shell({ children }) {
           <span className={styles.brandName}>Valida Studio</span>
         </div>
         <div className={styles.navArea} />
-        <UserMenu name={name} avatar={avatar} />
+        <UserMenu name={name} avatar={avatar} plan={plan} />
       </aside>
       <main className={styles.content}>{children}</main>
     </div>

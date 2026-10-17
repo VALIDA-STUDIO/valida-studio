@@ -60,22 +60,44 @@
 }
 
 /* verified seal pinned to the avatar's bottom-right corner, ringed by the chip background */
-.verified {
+/* plan star (beveled blue star image); Pro and Enterprise are hue-shifted */
+.star {
   position: absolute;
-  right: -4px;
-  bottom: -4px;
-  width: 16px;
-  height: 16px;
-  padding: 1.5px;
-  border-radius: 50%;
-  background: var(--sidebar-bg);
-  color: #0095f6; /* Meta verified blue */
-  transition: background 0.15s;
+  right: -7px;
+  bottom: -7px;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1px var(--sidebar-bg));
 }
 
-.trigger:hover .verified,
-.trigger[data-open] .verified {
-  background: var(--chip-hover);
+.star[data-plan="pro"] {
+  filter: hue-rotate(195deg) saturate(1.2) drop-shadow(0 0 1px var(--sidebar-bg));
+}
+
+.star[data-plan="enterprise"] {
+  filter: hue-rotate(60deg) drop-shadow(0 0 1px var(--sidebar-bg));
+}
+
+/* plan name under the user name: small square tag */
+.plan {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  padding: 0 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border-strong);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.plan[data-plan="pro"],
+.plan[data-plan="enterprise"] {
+  color: var(--fg);
+  border-color: var(--fg);
 }
 
 .name {
