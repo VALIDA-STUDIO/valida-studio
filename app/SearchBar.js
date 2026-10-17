@@ -35,6 +35,12 @@ const MegaphoneIcon = () => (
 );
 const BLOCK_ICONS = { event: BoltIcon, broadcast: MegaphoneIcon };
 
+const PlusIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+);
+
 const ChevronIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="m6 9 6 6 6-6" />
@@ -102,32 +108,49 @@ export default function SearchBar() {
         </div>
       )}
 
-      <ul className={styles.blocks} aria-label="Blocks">
-        {BLOCKS.filter((b) => (filter === "All" || b.kind === filter) && b.label.toLowerCase().includes(query.trim().toLowerCase())).map((b) => {
-          const Icon = BLOCK_ICONS[b.type];
-          return (
-            <li key={b.type}>
-              <button
-                className={styles.block}
-                type="button"
-                draggable
-                onDragStart={(e) => {
-                  e.dataTransfer.setData(DRAG_TYPE, b.type);
-                  e.dataTransfer.effectAllowed = "copy";
-                }}
-                onClick={() => window.dispatchEvent(new CustomEvent(ADD_EVENT, { detail: { type: b.type } }))}
-                title="Click or drag onto the canvas"
-              >
-                <span className={styles.blockIcon}>{Icon && <Icon />}</span>
-                <span className={styles.blockText}>
-                  <span className={styles.blockLabel}>{b.label}</span>
-                  <span className={styles.blockDesc}>{b.desc}</span>
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      {(() => {
+        const shown = BLOCKS.filter((b) => (filter === "All" || b.kind === filter) && b.label.toLowerCase().includes(query.trim().toLowerCase()));
+        if (!shown.length) return <p className={styles.blocksEmpty}>Nothing matches.</p>;
+        const groups = [...new Set(shown.map((b) => b.kind))];
+        return (
+          <div className={styles.blocks} aria-label="Blocks" role="list">
+            {groups.map((kind) => (
+              <div key={kind} className={styles.blockGroup}>
+                <span className={styles.blockGroupLabel}>{kind}</span>
+                {shown
+                  .filter((b) => b.kind === kind)
+                  .map((b) => {
+                    const Icon = BLOCK_ICONS[b.type];
+                    return (
+                      <button
+                        key={b.type}
+                        className={styles.block}
+                        role="listitem"
+                        type="button"
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData(DRAG_TYPE, b.type);
+                          e.dataTransfer.effectAllowed = "copy";
+                        }}
+                        onClick={() => window.dispatchEvent(new CustomEvent(ADD_EVENT, { detail: { type: b.type } }))}
+                        title="Click or drag onto the canvas"
+                      >
+                        <span className={styles.blockIcon}>{Icon && <Icon />}</span>
+                        <span className={styles.blockText}>
+                          <span className={styles.blockLabel}>{b.label}</span>
+                          <span className={styles.blockDesc}>{b.desc}</span>
+                        </span>
+                        <span className={styles.blockAdd} aria-hidden="true">
+                          <PlusIcon />
+                        </span>
+                      </button>
+                    );
+                  })}
+              </div>
+            ))}
+          </div>
+        );
+      })()}
     </div>
   );
 }

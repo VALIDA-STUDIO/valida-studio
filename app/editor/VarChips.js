@@ -20,16 +20,17 @@ const BackIcon = () => (
 export default function VarChips({ vars, onInsert }) {
   const [open, setOpen] = useState(null); // { path: ["player"], type: "Player" }
   const [arg, setArg] = useState(""); // number for slot(n)
+  const [q, setQ] = useState("");
   const ref = useRef(null);
 
   useEffect(() => {
     if (!open) return;
     const onDown = (e) => !ref.current?.contains(e.target) && setOpen(null);
     const onKey = (e) => e.key === "Escape" && setOpen(null);
-    document.addEventListener("mousedown", onDown);
+    document.addEventListener("pointerdown", onDown, true);
     document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("pointerdown", onDown, true);
       document.removeEventListener("keydown", onKey);
     };
   }, [open]);
@@ -38,6 +39,7 @@ export default function VarChips({ vars, onInsert }) {
     onInsert(path.join("."));
     setOpen(null);
     setArg("");
+    setQ("");
   };
   const go = (key, prop) => {
     const seg = prop.arg ? `${key}(${arg === "" ? prop.arg.placeholder : arg})` : key;
@@ -81,7 +83,9 @@ export default function VarChips({ vars, onInsert }) {
             <span className={styles.varType}>use this</span>
           </button>
           <div className={styles.varSep} />
-          {Object.entries(TYPES[open.type]).map(([key, prop]) => (
+          <input className={`${styles.varSearch} nodrag`} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search" aria-label="Search properties" autoFocus autoComplete="off" spellCheck={false} />
+          {Object.entries(TYPES[open.type]).filter(([key]) => key.toLowerCase().includes(q.trim().toLowerCase())).length === 0 && <span className={styles.varEmpty}>Nothing matches.</span>}
+          {Object.entries(TYPES[open.type]).filter(([key]) => key.toLowerCase().includes(q.trim().toLowerCase())).map(([key, prop]) => (
             <div key={key} className={styles.varRow}>
               {prop.arg && (
                 <input

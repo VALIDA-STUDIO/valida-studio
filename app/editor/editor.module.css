@@ -7,7 +7,7 @@
 /* React Flow theme hooks → our tokens */
 .flow {
   --xy-background-color: var(--bg);
-  --xy-background-pattern-color: var(--border-strong);
+  --xy-background-pattern-color: color-mix(in srgb, var(--border) 55%, transparent);
   --xy-edge-stroke: var(--muted);
   --xy-edge-stroke-selected: var(--fg);
   --xy-edge-stroke-width: 1.5;
@@ -45,7 +45,7 @@
   background: var(--card-bg);
   color: var(--fg);
   font-size: 13px;
-  transition: border-color 0.12s;
+  transition: border-color 0.12s, box-shadow 0.12s;
 }
 
 .node:hover {
@@ -54,6 +54,7 @@
 
 .node[data-selected] {
   border-color: var(--fg);
+  box-shadow: 0 0 0 1px var(--fg);
 }
 
 .nodeHead {
@@ -163,18 +164,32 @@
   position: relative;
   display: flex;
   justify-content: flex-end;
-  padding: 0 14px 0 12px;
+  padding: 0 16px 0 12px;
   font-size: 11.5px;
   font-weight: 500;
-  line-height: 18px;
+  line-height: 20px;
   color: var(--muted);
 }
 
 /* handles: small rings on the row's right edge */
 .handle {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-width: 1.5px;
+  transition: background 0.12s, transform 0.12s;
+}
+
+.handle:hover {
+  background: var(--fg);
+  transform: scale(1.15);
+}
+
+.flow :global(.react-flow__handle-left) {
+  left: -6px;
+}
+
+.flow :global(.react-flow__handle-right) {
+  right: -6px;
 }
 
 .nodeOutput :global(.react-flow__handle) {
@@ -304,7 +319,18 @@
 
 /* drop hint while dragging a block over the canvas */
 .flow[data-over] {
-  --xy-background-pattern-color: var(--fg);
+  --xy-background-pattern-color: var(--border-strong);
+}
+
+/* empty canvas hint */
+.hint {
+  margin: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px dashed var(--border-strong);
+  background: var(--card-bg);
+  font-size: 12.5px;
+  color: var(--muted);
 }
 
 /* ---------- action nodes ---------- */
@@ -511,4 +537,49 @@
 
 .varUse:hover {
   background: var(--tag-bg);
+}
+
+/* search + fade for the variable menu */
+.varMenu {
+  animation: varFade 0.12s ease-out;
+}
+
+@keyframes varFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.varSearch {
+  width: 100%;
+  height: 28px;
+  margin: 2px 0 4px;
+  padding: 0 9px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.varSearch:focus {
+  border-color: var(--fg);
+}
+
+.varSearch::placeholder {
+  color: var(--border-strong);
+}
+
+.varEmpty {
+  display: block;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--muted);
 }

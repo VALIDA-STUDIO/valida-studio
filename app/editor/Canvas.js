@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, MarkerType, addEdge, useNodesState, useEdgesState, useReactFlow } from "@xyflow/react";
+import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, MiniMap, Panel, MarkerType, ConnectionLineType, addEdge, useNodesState, useEdgesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import EventNode from "./EventNode";
 import BroadcastNode from "./BroadcastNode";
@@ -14,6 +14,8 @@ const nodeTypes = { event: EventNode, broadcast: BroadcastNode };
 const arrow = { markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];
 const fitViewOptions = { maxZoom: 1, padding: 0.3 };
+const snapGrid = [8, 8];
+const connectionLineStyle = { strokeDasharray: "6 4" };
 const newId = () => "n_" + Math.random().toString(36).slice(2, 8);
 
 // what gets stored: nodes with their data, edges with their handles
@@ -112,6 +114,10 @@ function Flow({ projectId, initial }) {
       onDragOver={onDragOver}
       onDragLeave={() => setOver(false)}
       onDrop={onDrop}
+      snapToGrid
+      snapGrid={snapGrid}
+      connectionLineType={ConnectionLineType.SmoothStep}
+      connectionLineStyle={connectionLineStyle}
       fitView={initial.nodes.length > 0}
       fitViewOptions={fitViewOptions}
       minZoom={0.4}
@@ -119,8 +125,14 @@ function Flow({ projectId, initial }) {
       deleteKeyCode={deleteKeys}
       proOptions={{ hideAttribution: true }}
     >
-      <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
+      <Background variant={BackgroundVariant.Lines} gap={24} lineWidth={1} />
       <Controls showInteractive={false} />
+      <MiniMap pannable zoomable />
+      {nodes.length === 0 && (
+        <Panel position="bottom-center" className={styles.hint}>
+          Drag a block from the left, or click one.
+        </Panel>
+      )}
     </ReactFlow>
   );
 }
