@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import UserMenu from "./UserMenu";
+import ProjectsNav from "./ProjectsNav";
 import styles from "./Shell.module.css";
 
 // Loads the signed-in user, or sends the visitor straight to Discord.
@@ -38,7 +39,9 @@ export default async function Shell({ children }) {
           <span className={styles.brandName}>Valida Studio</span>
           <span className={styles.beta}>Beta</span>
         </div>
-        <div className={styles.navArea} />
+        <div className={styles.navArea}>
+          <ProjectsNav />
+        </div>
         <UserMenu name={name} avatar={avatar} plan={plan} />
       </aside>
       <main className={styles.content}>{children}</main>
