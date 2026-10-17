@@ -877,10 +877,9 @@
   white-space: pre;
 }
 
+/* same font as the field underneath, otherwise the caret drifts; only the colour differs */
 .msgTag {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 12px;
-  font-weight: 600;
+  font: inherit;
 }
 
 .msgArea,
