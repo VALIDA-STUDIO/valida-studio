@@ -74,6 +74,7 @@ export default function Topbar({ projects, activeId }) {
         <button className={styles.iconBtn} type="button" title="Redo (⇧⌘Z)" aria-label="Redo">
           <RedoIcon />
         </button>
+        <span className={styles.divider} aria-hidden="true" />
         <button className={styles.export} type="button" title="Build the plugin and download it">
           <HammerIcon />
           Export .jar

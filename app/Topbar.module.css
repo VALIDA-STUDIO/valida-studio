@@ -19,16 +19,16 @@
   min-width: 0;
 }
 
-/* right side: one box holding undo, redo and export */
+/* right side: one box holding undo, redo and export, with a short divider between them */
 .actions {
   display: inline-flex;
   align-items: center;
-  height: 34px;
-  padding: 2px;
+  height: 36px;
+  padding: 4px;
   margin-left: 16px;
-  gap: 2px;
+  gap: 4px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 9px;
   background: var(--card-bg);
   flex-shrink: 0;
 }
@@ -36,14 +36,19 @@
 .iconBtn {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
   transition: color 0.12s, background 0.12s;
+}
+
+.iconBtn svg {
+  width: 13px;
+  height: 13px;
 }
 
 .iconBtn:hover {
@@ -51,23 +56,35 @@
   background: var(--surface-hover);
 }
 
+/* short vertical rule, not touching the box edges */
+.divider {
+  width: 1px;
+  height: 14px;
+  margin: 0 4px;
+  background: var(--border-strong);
+}
+
 .export {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  height: 28px;
-  padding: 0 11px;
-  margin-left: 2px;
-  border-radius: 6px;
+  gap: 6px;
+  height: 26px;
+  padding: 0 9px;
+  border-radius: 5px;
   border: none;
   background: var(--fg);
   color: var(--bg);
   font: inherit;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
   transition: opacity 0.12s;
+}
+
+.export svg {
+  width: 13px;
+  height: 13px;
 }
 
 .export:hover {
