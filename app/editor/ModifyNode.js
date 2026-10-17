@@ -41,6 +41,16 @@ function ModifyNode({ id, data, selected }) {
   const [open, setOpen] = useState(false);
   const menu = useRef(null);
 
+  // the event above changed: drop changes that belong to another event
+  useEffect(() => {
+    if (!event) return;
+    const stale = Object.keys(values).filter((k) => !setters.some((s) => s.key === k));
+    if (!stale.length) return;
+    const next = { ...values };
+    for (const k of stale) delete next[k];
+    updateNodeData(id, { values: next });
+  }, [event, values, setters, id, updateNodeData]);
+
   useEffect(() => {
     if (!open) return;
     const onDown = (e) => !menu.current?.contains(e.target) && setOpen(false);
