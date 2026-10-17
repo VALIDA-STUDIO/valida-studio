@@ -259,6 +259,10 @@
 }
 
 /* kind colours, icons only */
+.blockIcon[data-kind="Commands"] {
+  color: var(--kind-command);
+}
+
 .blockIcon[data-kind="Events"] {
   color: var(--kind-event);
 }

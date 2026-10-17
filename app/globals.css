@@ -3,6 +3,7 @@
 :root {
   /* block kinds: only the icons use these */
   --kind-event: #7dd3fc; /* tailwind sky-300 */
+  --kind-command: #c4b5fd; /* tailwind violet-300 */
   --kind-condition: #eab308;
   --kind-action: #22c55e;
   /* danger colours, used by settings cards and editor panels */

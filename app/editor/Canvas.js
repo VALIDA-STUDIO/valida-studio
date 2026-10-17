@@ -13,7 +13,7 @@ import styles from "./editor.module.css";
 const nodeTypes = { event: EventNode, broadcast: BroadcastNode };
 // kind of each node type, and the colour its connections get
 const KIND = { event: "event", broadcast: "action" };
-const KIND_COLOR = { event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
+const KIND_COLOR = { command: "var(--kind-command)", event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
 const arrow = { animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];
 const fitViewOptions = { maxZoom: 1, padding: 0.3 };

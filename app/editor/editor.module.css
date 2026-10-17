@@ -583,6 +583,10 @@
 }
 
 /* kind colours, icons only */
+.nodeBadge[data-kind="command"] {
+  color: var(--kind-command);
+}
+
 .nodeBadge[data-kind="event"] {
   color: var(--kind-event);
 }
@@ -630,4 +634,16 @@
 
 .node[data-kind="action"] .nodeOutput[data-flow] .handle:hover {
   background: var(--kind-action);
+}
+
+.node[data-kind="command"] .nodeOutput[data-flow] {
+  color: var(--kind-command);
+}
+
+.node[data-kind="command"] .nodeOutput[data-flow] .handle {
+  border-color: var(--kind-command);
+}
+
+.node[data-kind="command"] .nodeOutput[data-flow] .handle:hover {
+  background: var(--kind-command);
 }
