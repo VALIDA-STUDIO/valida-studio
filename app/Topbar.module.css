@@ -64,6 +64,47 @@
   background: var(--border-strong);
 }
 
+/* outlined sibling of the export button */
+.test {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 9px;
+  border-radius: 5px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.test:hover {
+  background: var(--surface-hover);
+  border-color: var(--fg);
+}
+
+.test svg {
+  width: 12px;
+  height: 12px;
+}
+
+.soon {
+  padding: 0 5px;
+  border-radius: 3px;
+  background: var(--tag-bg);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .export {
   display: inline-flex;
   align-items: center;

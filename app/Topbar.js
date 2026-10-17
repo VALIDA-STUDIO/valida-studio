@@ -23,6 +23,12 @@ const RedoIcon = () => (
   </svg>
 );
 
+const PlayIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="m6 3 14 9-14 9z" />
+  </svg>
+);
+
 const HammerIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="m15 12-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9" />
@@ -75,6 +81,11 @@ export default function Topbar({ projects, activeId }) {
           <RedoIcon />
         </button>
         <span className={styles.divider} aria-hidden="true" />
+        <button className={styles.test} type="button" title="Run the plugin on a test server (coming soon)">
+          <PlayIcon />
+          TEST ON SERVER
+          <span className={styles.soon}>soon</span>
+        </button>
         <button className={styles.export} type="button" title="Build the plugin and download it">
           <HammerIcon />
           EXPORT .JAR
