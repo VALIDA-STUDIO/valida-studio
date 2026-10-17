@@ -42,6 +42,8 @@ const sameVars = (a, b) => a.length === b.length && a.every((v, i) => v.id === b
 // Variables defined on the project (from Project Settings)
 export const ProjectVarsContext = createContext([]);
 export const useProjectVars = () => useContext(ProjectVarsContext);
+export const ProjectIdContext = createContext(null);
+export const useProjectId = () => useContext(ProjectIdContext);
 const TYPE = { number: "Number", text: "String", boolean: "Boolean" };
 
 // Variables available to a node: project variables plus what the flow above provides.

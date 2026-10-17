@@ -63,7 +63,7 @@ export default async function Shell({ children }) {
           <span className={styles.beta}>Beta</span>
         </div>
         <div className={styles.navArea}>
-          <SearchBar />
+          <SearchBar projectId={activeId} variables={projects.find((p) => p.id === activeId)?.variables ?? []} />
         </div>
         <UserMenu name={name} avatar={avatar} plan={plan} />
       </aside>

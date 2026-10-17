@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ProjectVarsContext } from "./useVars";
+import { ProjectVarsContext, ProjectIdContext } from "./useVars";
 import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, MiniMap, Panel, MarkerType, ConnectionLineType, addEdge, useNodesState, useEdgesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import EventNode from "./EventNode";
@@ -238,13 +238,22 @@ function Flow({ projectId, initial }) {
 // The node canvas of a project. Blocks come from the sidebar; changes are saved on the project.
 export default function Canvas({ projectId, graph, variables = [] }) {
   const initial = useMemo(() => hydrate(graph), [graph]);
+  const [vars, setVars] = useState(variables);
+  useEffect(() => setVars(variables), [variables]);
+  useEffect(() => {
+    const on = (e) => setVars(e.detail);
+    window.addEventListener("valida:variables", on);
+    return () => window.removeEventListener("valida:variables", on);
+  }, []);
   return (
     <div className={styles.wrap}>
-      <ProjectVarsContext.Provider value={variables}>
-        <ReactFlowProvider>
-          <Flow projectId={projectId} initial={initial} />
-        </ReactFlowProvider>
-      </ProjectVarsContext.Provider>
+      <ProjectIdContext.Provider value={projectId}>
+        <ProjectVarsContext.Provider value={vars}>
+          <ReactFlowProvider>
+            <Flow projectId={projectId} initial={initial} />
+          </ReactFlowProvider>
+        </ProjectVarsContext.Provider>
+      </ProjectIdContext.Provider>
     </div>
   );
 }

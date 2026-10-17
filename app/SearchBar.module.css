@@ -279,3 +279,115 @@
 .item[data-on] .icon {
   color: inherit;
 }
+
+/* ---------- Blocks / Variables switch ---------- */
+
+.views {
+  display: flex;
+  gap: 14px;
+  margin: 12px 0 0;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.viewTab {
+  position: relative;
+  height: 30px;
+  padding: 0 2px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.12s;
+}
+
+.viewTab:hover,
+.viewTab[data-on] {
+  color: var(--fg);
+}
+
+.viewTab[data-on]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1.5px;
+  background: var(--fg);
+}
+
+/* ---------- variables view ---------- */
+
+.vars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.varNew {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.varNew:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+  background: var(--surface-hover);
+}
+
+.varList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.varRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.varRow:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.varName {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.varMeta {
+  font-size: 11.5px;
+  color: var(--muted);
+}

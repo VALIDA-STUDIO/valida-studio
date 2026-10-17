@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BLOCKS, DRAG_TYPE, ADD_EVENT } from "./editor/blocks";
 import { ACTION_ICONS } from "./editor/ActionNode";
+import VariablesPanel from "./VariablesPanel";
 import styles from "./SearchBar.module.css";
 
 const ic = { width: 15, height: 15, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
@@ -64,8 +65,9 @@ const CheckIcon = () => (
 );
 
 // Sidebar search, kind filter, and the list of blocks you can click or drag onto the canvas.
-export default function SearchBar() {
+export default function SearchBar({ projectId, variables }) {
   const [filter, setFilter] = useState("All");
+  const [view, setView] = useState("blocks");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -91,6 +93,7 @@ export default function SearchBar() {
         <SearchIcon />
         <input type="search" placeholder="Search" aria-label="Search" autoComplete="off" spellCheck={false} value={query} onChange={(e) => setQuery(e.target.value)} />
         {/* filter chip inside the field */}
+        {view === "blocks" && (
         <button className={styles.chip} data-open={open || undefined} type="button" onClick={() => setOpen((v) => !v)} aria-haspopup="menu" aria-expanded={open} aria-label={`Filter: ${filter}`}>
           <span style={FILTERS.find((x) => x.id === filter).color ? { color: FILTERS.find((x) => x.id === filter).color, display: "grid" } : { display: "grid" }}>
             <Current />
@@ -100,9 +103,23 @@ export default function SearchBar() {
             <ChevronIcon />
           </span>
         </button>
+        )}
       </div>
 
-      {open && (
+      <div className={styles.views} role="tablist">
+        {[
+          ["blocks", "Blocks"],
+          ["variables", "Variables"],
+        ].map(([id, label]) => (
+          <button key={id} className={styles.viewTab} type="button" role="tab" aria-selected={view === id} data-on={view === id || undefined} onClick={() => setView(id)}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {view === "variables" && <VariablesPanel projectId={projectId} initial={variables} query={query} />}
+
+      {view === "blocks" && open && (
         <div className={styles.menu} role="menu">
           {FILTERS.map(({ id: f, Icon }) => (
             <button key={f} className={styles.item} type="button" role="menuitemradio" aria-checked={filter === f} data-on={filter === f || undefined} onClick={() => (setFilter(f), setOpen(false))}>
@@ -120,7 +137,7 @@ export default function SearchBar() {
         </div>
       )}
 
-      {(() => {
+      {view === "blocks" && (() => {
         const shown = BLOCKS.filter((b) => (filter === "All" || b.kind === filter) && b.label.toLowerCase().includes(query.trim().toLowerCase()));
         if (!shown.length) return <p className={styles.blocksEmpty}>Nothing matches.</p>;
         const groups = [...new Set(shown.map((b) => b.kind))];

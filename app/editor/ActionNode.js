@@ -1,12 +1,13 @@
 "use client";
 
-import { memo, useRef } from "react";
+import { memo, useRef, useState } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { ACTIONS } from "./actions";
-import { useVars, useProjectVars } from "./useVars";
+import { useVars, useProjectVars, useProjectId } from "./useVars";
 import VarChips from "./VarChips";
 import MessageField from "./MessageField";
 import NodeSelect from "./NodeSelect";
+import VariableForm from "./VariableForm";
 import styles from "./editor.module.css";
 
 const ic = { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
@@ -25,7 +26,9 @@ function ActionNode({ id, data, selected }) {
   const values = data.values ?? {};
   const vars = useVars(id);
   const projectVars = useProjectVars();
+  const projectId = useProjectId();
   const last = useRef(null);
+  const [creating, setCreating] = useState(false);
   const Icon = ACTION_ICONS[def.icon];
   const fields = def.fields.filter((f) => !f.when || Object.entries(f.when).every(([k, allowed]) => allowed.includes(values[k] ?? def.fields.find((x) => x.key === k)?.select?.[0])));
 
@@ -63,10 +66,15 @@ function ActionNode({ id, data, selected }) {
             f.variable ? (
               <div key={f.key} className={styles.condField} data-wide="" style={i ? { marginTop: 10 } : undefined}>
                 <span className={styles.nodeLabel}>{f.label}</span>
-                {projectVars.length ? (
-                  <NodeSelect value={values[f.key] ?? ""} options={[{ id: "", label: "Choose a variable" }, ...projectVars.map((v) => ({ id: v.name, label: `${v.name}  ·  ${v.type}${v.perPlayer ? ", per player" : ""}` }))]} onChange={(v) => set(f.key, v)} label={f.label} />
+                {creating ? (
+                  <VariableForm projectId={projectId} variables={projectVars} onDone={(v) => (setCreating(false), v && set(f.key, v.name))} onCancel={() => setCreating(false)} compact />
                 ) : (
-                  <span className={styles.nodeText}>No variables yet. Add them in Project Settings.</span>
+                  <NodeSelect
+                    value={values[f.key] ?? ""}
+                    options={[{ id: "", label: projectVars.length ? "Choose a variable" : "No variables yet" }, ...projectVars.map((v) => ({ id: v.name, label: `${v.name}  ·  ${v.type}${v.perPlayer ? ", per player" : ""}` })), { id: "__new", label: "New variable…" }]}
+                    onChange={(v) => (v === "__new" ? setCreating(true) : set(f.key, v))}
+                    label={f.label}
+                  />
                 )}
               </div>
             ) : f.toggle ? (
