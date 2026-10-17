@@ -1,10 +1,9 @@
 "use client";
 
-import { memo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useVars, useUpstreamEvent } from "./useVars";
 import VarChips from "./VarChips";
-import NodeSelect from "./NodeSelect";
 import MessageField from "./MessageField";
 import styles from "./editor.module.css";
 
@@ -24,12 +23,12 @@ const PlusIcon = () => (
   </svg>
 );
 const CheckIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="m5 12 5 5L20 7" />
   </svg>
 );
 
-// Modify event: changes on the event upstream. Add what you need; conflicting settings swap each other out.
+// Modify event: changes on the event upstream. "Add" lists what the event allows; each pick is a row.
 function ModifyNode({ id, data, selected }) {
   const { updateNodeData } = useReactFlow();
   const event = useUpstreamEvent(id);
@@ -39,7 +38,20 @@ function ModifyNode({ id, data, selected }) {
   const added = setters.filter((s) => values[s.key] !== undefined);
   const available = setters.filter((s) => values[s.key] === undefined);
   const last = useRef(null);
-  const [adding, setAdding] = useState(false);
+  const [open, setOpen] = useState(false);
+  const menu = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => !menu.current?.contains(e.target) && setOpen(false);
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("pointerdown", onDown, true);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   const set = (key, v) => updateNodeData(id, { values: { ...values, [key]: v } });
   const add = (s) => {
@@ -47,7 +59,7 @@ function ModifyNode({ id, data, selected }) {
     for (const k of s.excludes ?? []) delete next[k];
     next[s.key] = s.toggle ? true : "";
     updateNodeData(id, { values: next });
-    setAdding(false);
+    setOpen(false);
   };
   const remove = (key) => {
     const next = { ...values };
@@ -80,34 +92,42 @@ function ModifyNode({ id, data, selected }) {
       </div>
       <div className={styles.nodeBody}>
         {!event && <span className={styles.nodeText}>Connect it after an event.</span>}
-        {event && added.length === 0 && !adding && <span className={styles.nodeText}>Nothing changed yet.</span>}
 
-        {added.map((s) => (
-          <div key={s.key} className={styles.modRow} data-on="">
-            <div className={styles.modHead}>
-              {s.toggle && (
-                <span className={styles.modCheck}>
-                  <CheckIcon />
-                </span>
-              )}
-              <span className={styles.modLabel}>{s.label}</span>
-              <button className={`${styles.modRemove} nodrag`} type="button" aria-label={`Remove ${s.label}`} onClick={() => remove(s.key)}>
-                <XIcon />
-              </button>
-            </div>
-            {s.text && <MessageField value={values[s.key]} onChange={(v) => set(s.key, v)} placeholder={s.placeholder} dataKey={s.key} onFocus={(e) => (last.current = e.target)} label={`${s.label} text`} />}
+        {added.length > 0 && (
+          <div className={styles.modList}>
+            {added.map((s) => (
+              <div key={s.key} className={styles.modItem}>
+                <div className={styles.modHead}>
+                  {s.toggle && (
+                    <span className={styles.modCheck}>
+                      <CheckIcon />
+                    </span>
+                  )}
+                  <span className={styles.modLabel}>{s.label}</span>
+                  <button className={`${styles.modRemove} nodrag`} type="button" aria-label={`Remove ${s.label}`} onClick={() => remove(s.key)}>
+                    <XIcon />
+                  </button>
+                </div>
+                {s.text && <MessageField value={values[s.key]} onChange={(v) => set(s.key, v)} placeholder={s.placeholder} dataKey={s.key} onFocus={(e) => (last.current = e.target)} label={`${s.label} text`} />}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
 
         {event && available.length > 0 && (
-          <div className={styles.modAdd}>
-            {adding ? (
-              <NodeSelect value="" options={[{ id: "", label: "Choose what to change" }, ...available.map((s) => ({ id: s.key, label: s.label }))]} onChange={(key) => key && add(setters.find((s) => s.key === key))} label="What to change" />
-            ) : (
-              <button className={`${styles.add} nodrag`} type="button" onClick={() => setAdding(true)}>
-                <PlusIcon />
-                Add
-              </button>
+          <div className={styles.modAdd} ref={menu}>
+            <button className={`${styles.add} nodrag`} type="button" data-open={open || undefined} onClick={() => setOpen((v) => !v)} aria-haspopup="menu" aria-expanded={open}>
+              <PlusIcon />
+              {added.length ? "Add another" : "Add a change"}
+            </button>
+            {open && (
+              <div className={styles.pickerMenu} role="menu">
+                {available.map((s) => (
+                  <button key={s.key} className={styles.pickerItem} type="button" role="menuitem" onClick={() => add(s)}>
+                    {s.label}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         )}

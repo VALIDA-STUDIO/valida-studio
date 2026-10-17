@@ -757,30 +757,32 @@
 
 /* ---------- modify event ---------- */
 
-.modRow {
+/* a plain list: label row, optional field, thin dividers between items */
+.modList {
+  display: flex;
+  flex-direction: column;
+}
+
+.modItem {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 8px 8px 8px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border-strong);
-  background: var(--bg);
+  padding: 8px 0 10px;
 }
 
-.modRow + .modRow {
-  margin-top: 6px;
+.modItem + .modItem {
+  border-top: 1px solid var(--border);
 }
 
-.modRow .nodeInput,
-.modRow .nodeTextarea {
-  background: var(--card-bg);
+.modList .modItem:first-child {
+  padding-top: 0;
 }
 
 .modHead {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 20px;
+  min-height: 22px;
 }
 
 .modCheck {
@@ -789,8 +791,8 @@
   width: 16px;
   height: 16px;
   border-radius: 5px;
-  background: var(--fg);
-  color: var(--bg);
+  background: var(--kind-action);
+  color: #0a0a0a;
 }
 
 .modLabel {
@@ -809,7 +811,13 @@
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  transition: color 0.12s, background 0.12s;
+  opacity: 0;
+  transition: color 0.12s, background 0.12s, opacity 0.12s;
+}
+
+.modItem:hover .modRemove,
+.modRemove:focus-visible {
+  opacity: 1;
 }
 
 .modRemove:hover {
@@ -818,7 +826,25 @@
 }
 
 .modAdd {
-  margin-top: 8px;
+  position: relative;
+}
+
+.modList + .modAdd {
+  margin-top: 4px;
+}
+
+.modAdd .add[data-open] {
+  color: var(--fg);
+  border-color: var(--fg);
+  border-style: solid;
+}
+
+.modAdd .pickerMenu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 20;
 }
 
 /* ---------- message field with colours ---------- */
