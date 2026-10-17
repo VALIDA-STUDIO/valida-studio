@@ -11,7 +11,7 @@ import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
 
 const nodeTypes = { event: EventNode, broadcast: BroadcastNode };
-const arrow = { markerEnd: { type: MarkerType.ArrowClosed } };
+const arrow = { animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];
 const fitViewOptions = { maxZoom: 1, padding: 0.3 };
 const snapGrid = [8, 8];

@@ -176,12 +176,11 @@
   width: 11px;
   height: 11px;
   border-width: 1.5px;
-  transition: background 0.12s, transform 0.12s;
+  transition: background 0.12s;
 }
 
 .handle:hover {
   background: var(--fg);
-  transform: scale(1.15);
 }
 
 .flow :global(.react-flow__handle-left) {
