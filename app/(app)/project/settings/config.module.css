@@ -3,8 +3,10 @@
 .textarea {
   display: block;
   width: 100%;
-  min-height: 68px;
+  min-height: 88px;
   margin-top: 0;
+  padding: 10px 12px;
+  font-size: 14px;
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -29,26 +31,30 @@
 
 .inputWide {
   width: 100%;
-  height: 34px;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
 }
 
 /* stacked labelled fields inside one card; two per row where they are short */
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 7px;
+  margin-top: 16px;
 }
 
 .field :global(div[class*="chips"]) {
   margin-top: 0;
   max-width: none;
+  min-height: 40px;
+  padding: 5px 7px;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 16px;
 }
 
 @media (max-width: 720px) {
@@ -60,7 +66,7 @@
 /* label above a field */
 .fieldLabel {
   display: block;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--muted);
 }
