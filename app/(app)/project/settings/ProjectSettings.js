@@ -6,18 +6,14 @@ import { updateProject, deleteProject } from "../../../projects/actions";
 import s from "../../settings/settings.module.css";
 import f from "../../../ProjectSwitcher.module.css";
 
-const CONFIRM_WORD = "DELETE";
-
 export default function ProjectSettings({ project }) {
   const router = useRouter();
   const [name, setName] = useState(project.name);
-  const [typed, setTyped] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [msg, setMsg] = useState({});
   const [pending, startTransition] = useTransition();
 
   const nameDirty = name.trim() !== project.name && name.trim();
-  const ready = typed.trim().toUpperCase() === CONFIRM_WORD;
 
   const save = (patch, key) =>
     startTransition(async () => {
@@ -96,34 +92,17 @@ export default function ProjectSettings({ project }) {
             </div>
             <div className={s.cardFoot}>
               {confirm ? (
-                <form
-                  className={s.confirm}
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (ready) remove();
-                  }}
-                >
+                <div className={s.confirm}>
                   <span className={s.footText}>
-                    Type <code>{CONFIRM_WORD}</code> to confirm
+                    Delete <strong>{project.name}</strong>? This cannot be undone.
                   </span>
-                  <input
-                    className={s.confirmInput}
-                    type="text"
-                    value={typed}
-                    onChange={(e) => setTyped(e.target.value)}
-                    onKeyDown={(e) => e.key === "Escape" && setConfirm(false)}
-                    placeholder={CONFIRM_WORD}
-                    autoComplete="off"
-                    spellCheck={false}
-                    autoFocus
-                  />
-                  <button className={s.btn} type="button" onClick={() => setConfirm(false)} disabled={pending}>
+                  <button className={s.btn} type="button" onClick={() => setConfirm(false)} disabled={pending} autoFocus>
                     Cancel
                   </button>
-                  <button className={s.btnDanger} type="submit" disabled={!ready || pending}>
-                    {pending ? "Deleting…" : "Delete"}
+                  <button className={s.btnDanger} type="button" onClick={remove} disabled={pending}>
+                    {pending ? "Deleting…" : "Yes, delete"}
                   </button>
-                </form>
+                </div>
               ) : (
                 <>
                   <span className={msg.danger ? s.error : s.footText}>{msg.danger ?? ""}</span>
