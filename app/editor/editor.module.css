@@ -39,9 +39,7 @@
 /* ---------- command node ---------- */
 
 .node {
-  width: max-content;
-  min-width: 280px;
-  max-width: 560px;
+  width: 280px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--card-bg);
@@ -868,10 +866,10 @@
 }
 
 .msgArea {
-  min-width: 100%;
+  width: 100%;
   min-height: 72px;
   padding-right: 34px;
-  resize: both;
+  resize: vertical;
 }
 
 .msgInput {
