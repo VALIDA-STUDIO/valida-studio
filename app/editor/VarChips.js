@@ -76,8 +76,9 @@ export default function VarChips({ vars, onInsert }) {
             <span className={styles.varPath}>{`{${open.path.join(".")}}`}</span>
             <span className={styles.varType}>{open.type}</span>
           </div>
-          <button className={styles.varItem} type="button" role="menuitem" onClick={() => insert(open.path)}>
-            Insert as is
+          <button className={`${styles.varItem} ${styles.varUse}`} type="button" role="menuitem" onClick={() => insert(open.path)}>
+            <span className={styles.varKey}>{`{${open.path.join(".")}}`}</span>
+            <span className={styles.varType}>use this</span>
           </button>
           <div className={styles.varSep} />
           {Object.entries(TYPES[open.type]).map(([key, prop]) => (

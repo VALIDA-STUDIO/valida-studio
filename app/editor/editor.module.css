@@ -503,3 +503,12 @@
 .varArg:focus {
   border-color: var(--fg);
 }
+
+/* "use this" row: the whole path, slightly raised */
+.varUse {
+  background: var(--surface-hover);
+}
+
+.varUse:hover {
+  background: var(--tag-bg);
+}
