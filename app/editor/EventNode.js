@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { EVENTS, DEFAULT_EVENT } from "./events";
 import styles from "./editor.module.css";
 
@@ -11,8 +11,9 @@ const BoltIcon = () => (
   </svg>
 );
 
-// An event; outputs are "then" plus what the event hands over.
-function EventNode({ data, selected }) {
+// An event: pick which one in the node; outputs are "then" plus what the event hands over.
+function EventNode({ id, data, selected }) {
+  const { updateNodeData } = useReactFlow();
   const event = EVENTS[data.event] ?? EVENTS[DEFAULT_EVENT];
 
   return (
@@ -24,7 +25,13 @@ function EventNode({ data, selected }) {
         <span className={styles.nodeKind}>Event</span>
       </div>
       <div className={styles.nodeBody}>
-        <span className={styles.nodeTitle}>{event.label}</span>
+        <select className={`${styles.nodeSelect} nodrag`} value={event.id} onChange={(e) => updateNodeData(id, { event: e.target.value })} aria-label="Event">
+          {Object.values(EVENTS).map((e) => (
+            <option key={e.id} value={e.id}>
+              {e.label}
+            </option>
+          ))}
+        </select>
         <span className={styles.nodeMono}>{event.paper}</span>
       </div>
       <div className={styles.nodeOutputs}>
