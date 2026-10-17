@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import styles from "./UserMenu.module.css";
 
 const icon = {
@@ -28,11 +27,12 @@ export const PLANS = {
   enterprise: "Enterprise",
 };
 
-const TeamIcon = () => (
-  <svg {...icon}>
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+// Discord mark, outlined to match the other 16px icons
+const DiscordIcon = () => (
+  <svg {...icon} strokeWidth="1.8">
+    <path d="M8.5 15.5c2.3 1.2 4.7 1.2 7 0M8.7 5.3c2.2-.5 4.4-.5 6.6 0l.5-1.3c1.6.3 3.2.9 4.5 1.7 1.8 3.5 2.6 7.3 2.2 11.1-1.7 1.3-3.5 2.2-5.4 2.8l-1.2-2.1M8.7 5.3l-.5-1.3c-1.6.3-3.2.9-4.5 1.7-1.8 3.5-2.6 7.3-2.2 11.1 1.7 1.3 3.5 2.2 5.4 2.8l1.2-2.1" />
+    <circle cx="9" cy="11.5" r="1.2" />
+    <circle cx="15" cy="11.5" r="1.2" />
   </svg>
 );
 
@@ -65,12 +65,12 @@ export default function UserMenu({ name, avatar, plan = "standard" }) {
     <div className={styles.wrap} ref={ref}>
       {open && (
         <div className={styles.menu} role="menu">
-          <Link className={styles.item} href="/team" role="menuitem" onClick={() => setOpen(false)}>
+          <a className={styles.item} href="https://discord.gg/BzX2zBz5C" target="_blank" rel="noopener noreferrer" role="menuitem" onClick={() => setOpen(false)}>
             <span className={styles.iconBox}>
-              <TeamIcon />
+              <DiscordIcon />
             </span>
-            Team panel
-          </Link>
+            Discord
+          </a>
           <form action="/auth/logout" method="post">
             <button className={styles.item} type="submit" role="menuitem">
               <span className={styles.iconBox}>
