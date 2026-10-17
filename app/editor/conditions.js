@@ -29,6 +29,26 @@ export const CONDITIONS = {
     ],
     paper: "player.hasPermission(node)",
   },
+  cooldown: {
+    label: "Cooldown",
+    desc: "Lets it through once, then waits",
+    fields: [
+      { key: "seconds", label: "Seconds", placeholder: "10", number: true },
+      { key: "scope", label: "", select: ["per player", "global"] },
+      { key: "player", label: "Player", placeholder: "{player}", vars: true, when: { scope: "per player" } },
+    ],
+    outputs: [
+      { id: "yes", label: "ready" },
+      { id: "no", label: "waiting" },
+    ],
+    paper: "timestamp map keyed by player uuid",
+  },
+  chance: {
+    label: "Chance",
+    desc: "Random, a percentage of the time",
+    fields: [{ key: "percent", label: "Percent", placeholder: "25", number: true }],
+    paper: "ThreadLocalRandom.current().nextDouble() * 100 < percent",
+  },
   is_op: {
     label: "Is operator",
     desc: "Player is a server operator",

@@ -8,13 +8,14 @@ import ActionNode from "./ActionNode";
 import ConditionNode from "./ConditionNode";
 import ModifyNode from "./ModifyNode";
 import FlowEdge from "./FlowEdge";
+import LoopNode from "./LoopNode";
 import { ADD_EVENT, DRAG_TYPE, BLOCKS } from "./blocks";
 import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
 
-const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode, condition: ConditionNode, modify: ModifyNode };
+const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode, condition: ConditionNode, modify: ModifyNode, loop: LoopNode };
 // kind of each node type, and the colour its connections get
-const KIND = { event: "event", action: "action", broadcast: "action", condition: "condition", modify: "action" };
+const KIND = { event: "event", action: "action", broadcast: "action", condition: "condition", modify: "action", loop: "action" };
 const KIND_COLOR = { command: "var(--kind-command)", event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
 const edgeTypes = { flow: FlowEdge };
 const arrow = { type: "flow", animated: true, markerEnd: { type: MarkerType.ArrowClosed } };

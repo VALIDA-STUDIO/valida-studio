@@ -965,3 +965,9 @@
   border-color: var(--fg);
   background: var(--surface-hover);
 }
+
+/* code-like field (variable names) */
+.nodeCode {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+}

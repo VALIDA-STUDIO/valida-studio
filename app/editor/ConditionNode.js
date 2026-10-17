@@ -24,6 +24,12 @@ function ConditionNode({ id, data, selected }) {
   const values = data.values ?? {};
   const vars = useVars(id);
   const last = useRef(null); // the input that had focus last
+  const outputs = def.outputs ?? [
+    { id: "yes", label: "yes" },
+    { id: "no", label: "no" },
+  ];
+  // a field can depend on another one's value (when: { scope: "per player" })
+  const shown = def.fields.filter((f) => !f.when || Object.entries(f.when).every(([k, v]) => (values[k] ?? def.fields.find((x) => x.key === k)?.select?.[0]) === v));
 
   const set = (key, v) => updateNodeData(id, { values: { ...values, [key]: v } });
   const insert = (path) => {
@@ -54,7 +60,7 @@ function ConditionNode({ id, data, selected }) {
       </div>
       <div className={styles.nodeBody}>
         <div className={styles.condRow}>
-          {def.fields.map((f) =>
+          {shown.map((f) =>
             f.select ? (
               <div key={f.key} className={styles.condSelectWrap}>
                 <NodeSelect value={values[f.key] ?? f.select[0]} options={f.select.map((o) => ({ id: o, label: o }))} onChange={(v) => set(f.key, v)} label="Comparison" compact />
@@ -78,17 +84,15 @@ function ConditionNode({ id, data, selected }) {
             )
           )}
         </div>
-        {vars.length > 0 && def.fields.some((f) => f.vars) && <VarChips vars={vars} onInsert={insert} />}
+        {vars.length > 0 && shown.some((f) => f.vars) && <VarChips vars={vars} onInsert={insert} />}
       </div>
       <div className={styles.nodeOutputs}>
-        <div className={styles.nodeOutput} data-flow="">
-          <span>yes</span>
-          <Handle type="source" position={Position.Right} id="yes" className={styles.handle} />
-        </div>
-        <div className={styles.nodeOutput} data-flow="">
-          <span>no</span>
-          <Handle type="source" position={Position.Right} id="no" className={styles.handle} />
-        </div>
+        {outputs.map((o) => (
+          <div key={o.id} className={styles.nodeOutput} data-flow="">
+            <span>{o.label}</span>
+            <Handle type="source" position={Position.Right} id={o.id} className={styles.handle} />
+          </div>
+        ))}
       </div>
     </div>
   );

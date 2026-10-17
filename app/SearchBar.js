@@ -37,7 +37,13 @@ const BranchIcon = () => (
   </svg>
 );
 const BLOCK_ICONS = { event: BoltIcon };
+const RepeatIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="m17 2 4 4-4 4" /><path d="M3 11v-1a4 4 0 0 1 4-4h14" /><path d="m7 22-4-4 4-4" /><path d="M21 13v1a4 4 0 0 1-4 4H3" />
+  </svg>
+);
 const KIND_ICONS = { Conditions: BranchIcon };
+const EXTRA_ICONS = { repeat: RepeatIcon };
 
 const PlusIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
@@ -126,7 +132,7 @@ export default function SearchBar() {
                 {shown
                   .filter((b) => b.kind === kind)
                   .map((b) => {
-                    const Icon = BLOCK_ICONS[b.id] ?? (b.icon && ACTION_ICONS[b.icon]) ?? KIND_ICONS[b.kind];
+                    const Icon = BLOCK_ICONS[b.id] ?? (b.icon && (ACTION_ICONS[b.icon] ?? EXTRA_ICONS[b.icon])) ?? KIND_ICONS[b.kind];
                     return (
                       <button
                         key={b.id}

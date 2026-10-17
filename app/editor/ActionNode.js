@@ -6,6 +6,7 @@ import { ACTIONS } from "./actions";
 import { useVars } from "./useVars";
 import VarChips from "./VarChips";
 import MessageField from "./MessageField";
+import NodeSelect from "./NodeSelect";
 import styles from "./editor.module.css";
 
 const ic = { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
@@ -54,25 +55,39 @@ function ActionNode({ id, data, selected }) {
       </div>
       {(def.fields.length > 0 || def.note) && (
         <div className={styles.nodeBody}>
-          {def.fields.map((f, i) => (
+          {def.fields.map((f, i) =>
+            f.toggle ? (
+              <label key={f.key} className={`${styles.nodeToggle} nodrag`}>
+                <input type="checkbox" checked={!!values[f.key]} onChange={(e) => set(f.key, e.target.checked)} />
+                <span className={styles.nodeToggleBox} aria-hidden="true" />
+                {f.label}
+              </label>
+            ) : f.select ? (
+              <div key={f.key} className={styles.condField} data-wide="" style={i ? { marginTop: 10 } : undefined}>
+                <span className={styles.nodeLabel}>{f.label}</span>
+                <NodeSelect value={values[f.key] ?? f.select[0]} options={f.select.map((o) => ({ id: o, label: o }))} onChange={(v) => set(f.key, v)} label={f.label} compact />
+              </div>
+            ) : (
             <label key={f.key} className={styles.condField} data-wide="" style={i ? { marginTop: 10 } : undefined}>
               <span className={styles.nodeLabel}>{f.label}</span>
               {f.area ? (
                 <MessageField value={values[f.key]} onChange={(v) => set(f.key, v)} placeholder={f.placeholder} dataKey={f.key} onFocus={(e) => (last.current = e.target)} label={f.label} />
               ) : (
                 <input
-                  className={`${styles.nodeInput} nodrag`}
+                  className={`${styles.nodeInput} ${f.code ? styles.nodeCode : ""} nodrag`}
                   data-key={f.key}
                   value={values[f.key] ?? ""}
-                  onChange={(e) => set(f.key, e.target.value)}
+                  onChange={(e) => set(f.key, f.number ? e.target.value.replace(/[^0-9.-]/g, "") : f.code ? e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "") : e.target.value)}
                   onFocus={(e) => (last.current = e.target)}
                   placeholder={f.placeholder}
+                  inputMode={f.number ? "decimal" : undefined}
                   autoComplete="off"
                   spellCheck={false}
                 />
               )}
             </label>
-          ))}
+            )
+          )}
           {vars.length > 0 && def.fields.some((f) => f.vars) && <VarChips vars={vars} onInsert={insert} />}
         </div>
       )}
