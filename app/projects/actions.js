@@ -58,3 +58,15 @@ export async function deleteProject(id) {
   revalidatePath("/", "layout");
   return { ok: true };
 }
+
+// Canvas of a project (nodes + edges as React Flow JSON). Saved silently from the editor.
+export async function saveGraph({ projectId, graph }) {
+  if (!Array.isArray(graph?.nodes) || !Array.isArray(graph?.edges)) return { error: "Invalid graph" };
+  if (JSON.stringify(graph).length > 300_000) return { error: "Graph too large" };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("projects").update({ graph }).eq("id", String(projectId)).select("id");
+  if (error) return { error: error.message };
+  if (!data?.length) return { error: "Project not found" };
+  return { ok: true };
+}

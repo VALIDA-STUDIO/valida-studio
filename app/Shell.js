@@ -41,6 +41,15 @@ export const getProjects = cache(async () => {
   return { projects, activeId };
 });
 
+// Canvas of one project
+export const getGraph = cache(async (projectId) => {
+  if (!projectId) return null;
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("projects").select("graph").eq("id", projectId).maybeSingle();
+  if (error) console.error("graph query failed:", error.message);
+  return data?.graph ?? {};
+});
+
 // Sidebar (logo, search, profile chip) + top bar with the breadcrumb and project switcher.
 export default async function Shell({ children }) {
   const [{ name, avatar }, plan, { projects, activeId }] = await Promise.all([requireUser(), getPlan(), getProjects()]);
