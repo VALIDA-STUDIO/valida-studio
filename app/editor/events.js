@@ -21,4 +21,15 @@ export const EVENTS = {
   },
 };
 
+EVENTS.player_chat = {
+  id: "player_chat",
+  label: "Player chats",
+  paper: "AsyncChatEvent",
+  cancellable: true,
+  outputs: [
+    { id: "player", label: "player", type: "Player" },
+    { id: "message", label: "message", type: "String" },
+  ],
+};
+
 export const DEFAULT_EVENT = "player_join";

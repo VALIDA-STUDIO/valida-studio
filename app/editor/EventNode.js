@@ -27,6 +27,13 @@ function EventNode({ id, data, selected }) {
       </div>
       <div className={styles.nodeBody}>
         <NodeSelect value={event.id} options={Object.values(EVENTS).map((e) => ({ id: e.id, label: e.paper }))} onChange={(v) => updateNodeData(id, { event: v })} label="Event" mono />
+        {event.cancellable && (
+          <label className={`${styles.nodeToggle} nodrag`}>
+            <input type="checkbox" checked={!!data.cancel} onChange={(e) => updateNodeData(id, { cancel: e.target.checked })} />
+            <span className={styles.nodeToggleBox} aria-hidden="true" />
+            Cancel this event
+          </label>
+        )}
       </div>
       <div className={styles.nodeOutputs}>
         <div className={styles.nodeOutput} data-flow="">

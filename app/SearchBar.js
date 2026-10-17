@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BLOCKS, DRAG_TYPE, ADD_EVENT } from "./editor/blocks";
+import { ACTION_ICONS } from "./editor/ActionNode";
 import styles from "./SearchBar.module.css";
 
 const ic = { width: 15, height: 15, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
@@ -131,7 +132,7 @@ export default function SearchBar() {
                 {shown
                   .filter((b) => b.kind === kind)
                   .map((b) => {
-                    const Icon = BLOCK_ICONS[b.id] ?? KIND_ICONS[b.kind];
+                    const Icon = BLOCK_ICONS[b.id] ?? (b.icon && ACTION_ICONS[b.icon]) ?? KIND_ICONS[b.kind];
                     return (
                       <button
                         key={b.id}

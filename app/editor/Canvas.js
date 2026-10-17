@@ -4,15 +4,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, MiniMap, Panel, MarkerType, ConnectionLineType, addEdge, useNodesState, useEdgesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import EventNode from "./EventNode";
-import BroadcastNode from "./BroadcastNode";
+import ActionNode from "./ActionNode";
 import ConditionNode from "./ConditionNode";
 import { ADD_EVENT, DRAG_TYPE, BLOCKS } from "./blocks";
 import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
 
-const nodeTypes = { event: EventNode, broadcast: BroadcastNode, condition: ConditionNode };
+const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode, condition: ConditionNode };
 // kind of each node type, and the colour its connections get
-const KIND = { event: "event", broadcast: "action", condition: "condition" };
+const KIND = { event: "event", action: "action", broadcast: "action", condition: "condition" };
 const KIND_COLOR = { command: "var(--kind-command)", event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
 const arrow = { type: "step", animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];
@@ -155,7 +155,9 @@ function Flow({ projectId, initial }) {
 export default function Canvas({ projectId, graph }) {
   const initial = useMemo(
     () => ({
-      nodes: (Array.isArray(graph?.nodes) ? graph.nodes : []).filter((n) => nodeTypes[n.type]),
+      nodes: (Array.isArray(graph?.nodes) ? graph.nodes : [])
+        .filter((n) => nodeTypes[n.type])
+        .map((n) => (n.type === "broadcast" ? { ...n, type: "action", data: { action: "broadcast", values: { message: n.data?.message ?? "" } } } : n)),
       edges: (Array.isArray(graph?.edges) ? graph.edges : []).map((e) => ({ ...e, ...arrow })),
     }),
     [graph]
