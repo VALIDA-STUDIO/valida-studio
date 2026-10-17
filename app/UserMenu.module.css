@@ -59,32 +59,30 @@
   height: 38px;
 }
 
-/* verified seal pinned to the avatar's bottom-right corner, ringed by the chip background */
-/* plan star (beveled blue star image); Pro and Enterprise are hue-shifted */
+/* plan star inside the tag; the image is blue, the plans shift its hue */
 .star {
-  position: absolute;
-  right: -7px;
-  bottom: -7px;
-  width: 22px;
-  height: 22px;
+  width: 14px;
+  height: 14px;
+  margin-left: -2px;
   object-fit: contain;
-  filter: drop-shadow(0 0 1px var(--sidebar-bg));
+  filter: hue-rotate(280deg); /* standard: green */
 }
 
 .star[data-plan="pro"] {
-  filter: hue-rotate(195deg) saturate(1.2) drop-shadow(0 0 1px var(--sidebar-bg));
+  filter: hue-rotate(120deg); /* pink */
 }
 
 .star[data-plan="enterprise"] {
-  filter: hue-rotate(60deg) drop-shadow(0 0 1px var(--sidebar-bg));
+  filter: hue-rotate(280deg); /* green */
 }
 
 /* plan name under the user name: small square tag */
 .plan {
   display: inline-flex;
   align-items: center;
-  height: 16px;
-  padding: 0 6px;
+  gap: 4px;
+  height: 18px;
+  padding: 0 6px 0 4px;
   border-radius: 3px;
   border: 1px solid var(--border-strong);
   font-size: 10px;

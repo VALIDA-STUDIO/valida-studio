@@ -82,13 +82,13 @@ export default function UserMenu({ name, avatar, plan = "standard" }) {
           ) : (
             <span className={styles.avatarFallback}>{name?.[0]?.toUpperCase()}</span>
           )}
-          {/* plan star on the avatar corner; colour follows the plan */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.star} data-plan={plan} src="/plan-star.png" alt={`${PLANS[plan] ?? "Standard"} plan`} width={22} height={22} />
         </span>
         <span className={styles.text}>
           <span className={styles.name}>{name}</span>
           <span className={styles.plan} data-plan={plan}>
+            {/* beveled star, hue-shifted per plan */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className={styles.star} data-plan={plan} src="/plan-star.png" alt="" width={14} height={14} />
             {PLANS[plan] ?? "Standard"}
           </span>
         </span>
