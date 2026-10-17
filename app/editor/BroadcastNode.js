@@ -41,7 +41,7 @@ function BroadcastNode({ id, data, selected }) {
     <div className={styles.node} data-kind="action" data-selected={selected || undefined}>
       <Handle type="target" position={Position.Left} className={styles.handle} />
       <div className={styles.nodeHead}>
-        <span className={`${styles.nodeBadge} ${styles.nodeBadgeAction}`}>
+        <span className={`${styles.nodeBadge} ${styles.nodeBadgeAction}`} data-kind="action">
           <MegaphoneIcon />
         </span>
         <span className={styles.nodeKind}>Broadcast</span>

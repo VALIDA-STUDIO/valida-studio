@@ -581,3 +581,16 @@
   font-size: 12px;
   color: var(--muted);
 }
+
+/* kind colours, icons only */
+.nodeBadge[data-kind="event"] {
+  color: var(--kind-event);
+}
+
+.nodeBadge[data-kind="condition"] {
+  color: var(--kind-condition);
+}
+
+.nodeBadge[data-kind="action"] {
+  color: var(--kind-action);
+}

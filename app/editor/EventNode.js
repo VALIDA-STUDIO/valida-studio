@@ -71,7 +71,7 @@ function EventNode({ id, data, selected }) {
   return (
     <div className={styles.node} data-selected={selected || undefined}>
       <div className={styles.nodeHead}>
-        <span className={`${styles.nodeBadge} ${styles.nodeBadgeAction}`}>
+        <span className={`${styles.nodeBadge} ${styles.nodeBadgeAction}`} data-kind="event">
           <BoltIcon />
         </span>
         <span className={styles.nodeKind}>Event</span>

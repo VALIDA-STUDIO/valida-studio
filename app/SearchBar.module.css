@@ -257,3 +257,21 @@
   font-size: 12.5px;
   color: var(--muted);
 }
+
+/* kind colours, icons only */
+.blockIcon[data-kind="Events"] {
+  color: var(--kind-event);
+}
+
+.blockIcon[data-kind="Conditions"] {
+  color: var(--kind-condition);
+}
+
+.blockIcon[data-kind="Actions"] {
+  color: var(--kind-action);
+}
+
+.item:hover .icon,
+.item[data-on] .icon {
+  color: inherit;
+}

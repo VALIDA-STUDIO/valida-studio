@@ -1,6 +1,10 @@
 /* ---------- design tokens: light is the default ---------- */
 
 :root {
+  /* block kinds: only the icons use these */
+  --kind-event: #3b82f6;
+  --kind-condition: #eab308;
+  --kind-action: #22c55e;
   /* danger colours, used by settings cards and editor panels */
   --danger: #ef4444;
   --danger-border: rgba(239, 68, 68, 0.45);
