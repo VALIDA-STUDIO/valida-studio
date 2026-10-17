@@ -1,17 +1,113 @@
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.wrap {
+  position: relative;
   margin-top: 14px;
 }
 
-.label {
-  padding: 0 10px 6px;
-  font-size: 10.5px;
+/* chip, same shape as the profile chip at the bottom */
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 60px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.trigger:hover,
+.trigger[data-open] {
+  background: var(--chip-hover);
+  border-color: var(--border-strong);
+}
+
+/* square-ish box with the cube, like the avatar */
+.mark,
+.itemMark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--fg);
+}
+
+.mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sub {
+  font-size: 11.5px;
   color: var(--muted);
+}
+
+.chevron {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.15s;
+}
+
+.trigger:hover .chevron {
+  color: var(--fg);
+}
+
+.trigger[data-open] .chevron {
+  color: var(--fg);
+  transform: rotate(180deg);
+}
+
+/* menu opens downwards under the chip */
+.menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  animation: fade 0.12s ease-out;
+  z-index: 10;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .item {
@@ -19,41 +115,47 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  height: 38px;
-  padding: 0 9px;
+  height: 40px;
+  padding: 0 8px;
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: none;
   background: transparent;
-  color: var(--muted);
+  color: var(--fg);
   font: inherit;
   font-size: 14px;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
-  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  transition: background 0.12s;
 }
 
-.item:hover {
-  color: var(--fg);
-  background: var(--surface-hover);
-}
-
+.item:hover,
 .item[data-active] {
-  color: var(--fg);
   background: var(--surface-hover);
-  border-color: var(--border);
 }
 
-.icon {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
+.itemMark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  color: var(--muted);
 }
 
-.name {
-  white-space: nowrap;
+.item:hover .itemMark,
+.item[data-active] .itemMark {
+  color: var(--fg);
+}
+
+.itemName {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.check {
+  display: grid;
+  place-items: center;
+  color: var(--fg);
 }
