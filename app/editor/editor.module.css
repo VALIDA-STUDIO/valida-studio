@@ -7,7 +7,7 @@
 /* React Flow theme hooks → our tokens */
 .flow {
   --xy-background-color: var(--bg);
-  --xy-background-pattern-color: color-mix(in srgb, var(--border) 55%, transparent);
+  --xy-background-pattern-color: var(--border-strong);
   --xy-edge-stroke: var(--muted);
   --xy-edge-stroke-selected: var(--fg);
   --xy-edge-stroke-width: 1.5;

@@ -125,7 +125,7 @@ function Flow({ projectId, initial }) {
       deleteKeyCode={deleteKeys}
       proOptions={{ hideAttribution: true }}
     >
-      <Background variant={BackgroundVariant.Lines} gap={24} lineWidth={1} />
+      <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
       <Controls showInteractive={false} />
       <MiniMap pannable zoomable />
       {nodes.length === 0 && (
