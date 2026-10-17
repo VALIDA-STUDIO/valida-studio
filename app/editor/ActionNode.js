@@ -5,6 +5,7 @@ import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { ACTIONS } from "./actions";
 import { useVars } from "./useVars";
 import VarChips from "./VarChips";
+import MessageField from "./MessageField";
 import styles from "./editor.module.css";
 
 const ic = { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
@@ -57,17 +58,7 @@ function ActionNode({ id, data, selected }) {
             <label key={f.key} className={styles.condField} data-wide="" style={i ? { marginTop: 10 } : undefined}>
               <span className={styles.nodeLabel}>{f.label}</span>
               {f.area ? (
-                <textarea
-                  className={`${styles.nodeTextarea} nodrag nowheel`}
-                  data-key={f.key}
-                  value={values[f.key] ?? ""}
-                  onChange={(e) => set(f.key, e.target.value)}
-                  onFocus={(e) => (last.current = e.target)}
-                  placeholder={f.placeholder}
-                  maxLength={300}
-                  rows={2}
-                  spellCheck={false}
-                />
+                <MessageField value={values[f.key]} onChange={(v) => set(f.key, v)} placeholder={f.placeholder} dataKey={f.key} onFocus={(e) => (last.current = e.target)} label={f.label} />
               ) : (
                 <input
                   className={`${styles.nodeInput} nodrag`}
