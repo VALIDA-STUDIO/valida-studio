@@ -1,15 +1,18 @@
 /* Vercel-style settings: stacked cards, each with title + description, a control,
    and a footer strip carrying the action. */
 
+/* centred column so the cards don't float in the empty area */
 .page {
-  max-width: 760px;
-  padding: 32px 40px 96px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 24px 96px;
 }
 
 /* ---------- header ---------- */
 
 .head {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .title {
@@ -28,7 +31,7 @@
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 32px;
 }
 
 .group {
