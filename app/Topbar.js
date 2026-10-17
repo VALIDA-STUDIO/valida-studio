@@ -77,7 +77,7 @@ export default function Topbar({ projects, activeId }) {
         <span className={styles.divider} aria-hidden="true" />
         <button className={styles.export} type="button" title="Build the plugin and download it">
           <HammerIcon />
-          Export .jar
+          EXPORT .JAR
         </button>
       </div>
     </header>
