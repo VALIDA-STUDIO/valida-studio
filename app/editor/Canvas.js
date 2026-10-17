@@ -7,6 +7,7 @@ import EventNode from "./EventNode";
 import ActionNode from "./ActionNode";
 import ConditionNode from "./ConditionNode";
 import ModifyNode from "./ModifyNode";
+import FlowEdge from "./FlowEdge";
 import { ADD_EVENT, DRAG_TYPE, BLOCKS } from "./blocks";
 import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
@@ -15,7 +16,8 @@ const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode,
 // kind of each node type, and the colour its connections get
 const KIND = { event: "event", action: "action", broadcast: "action", condition: "condition", modify: "action" };
 const KIND_COLOR = { command: "var(--kind-command)", event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
-const arrow = { type: "step", animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
+const edgeTypes = { flow: FlowEdge };
+const arrow = { type: "flow", animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];
 const fitViewOptions = { maxZoom: 1, padding: 0.3 };
 const snapGrid = [8, 8];
@@ -88,7 +90,7 @@ function Flow({ projectId, initial }) {
     const kindOf = new Map(nodes.map((n) => [n.id, KIND[n.type] ?? "action"]));
     return edges.map((e) => {
       const color = KIND_COLOR[kindOf.get(e.source)] ?? "var(--muted)";
-      return { ...e, type: "step", style: { stroke: color }, markerEnd: { type: MarkerType.ArrowClosed, color } };
+      return { ...e, type: "flow", style: { stroke: color }, markerEnd: { type: MarkerType.ArrowClosed, color } };
     });
   }, [nodes, edges]);
 
@@ -121,6 +123,7 @@ function Flow({ projectId, initial }) {
       nodes={nodes}
       edges={styledEdges}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}

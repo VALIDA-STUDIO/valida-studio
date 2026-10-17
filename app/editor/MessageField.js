@@ -40,18 +40,26 @@ export function ColorPreview({ text }) {
 export default function MessageField({ value, onChange, placeholder, dataKey, onFocus, area = true, label }) {
   const field = useRef(null);
   const picker = useRef(null);
+  const live = useRef(null); // the tag being picked right now: { start, end }, replaced on every move
 
+  // the picker fires on every move; the first one inserts a tag, the rest update that same tag
   const insertColor = (hex) => {
     const el = field.current;
     const text = value ?? "";
-    const start = el?.selectionStart ?? text.length;
-    const end = el?.selectionEnd ?? text.length;
     const tag = `<${hex}>`;
+    let start, end;
+    if (live.current && text.slice(live.current.start, live.current.end).match(/^<#[0-9a-fA-F]{6}>$/)) ({ start, end } = live.current);
+    else {
+      start = el?.selectionStart ?? text.length;
+      end = el?.selectionEnd ?? text.length;
+    }
     onChange(text.slice(0, start) + tag + text.slice(end));
-    requestAnimationFrame(() => {
-      el?.focus();
-      el?.setSelectionRange(start + tag.length, start + tag.length);
-    });
+    live.current = { start, end: start + tag.length };
+    requestAnimationFrame(() => el?.setSelectionRange(start + tag.length, start + tag.length));
+  };
+  const openPicker = () => {
+    live.current = null;
+    picker.current?.click();
   };
 
   const common = {
@@ -69,10 +77,10 @@ export default function MessageField({ value, onChange, placeholder, dataKey, on
     <div className={styles.msgWrap}>
       <div className={styles.msgBox}>
         {area ? <textarea className={`${styles.nodeTextarea} ${styles.msgArea} nodrag nowheel`} rows={2} maxLength={300} {...common} /> : <input className={`${styles.nodeInput} ${styles.msgInput} nodrag`} autoComplete="off" {...common} />}
-        <button className={`${styles.colorBtn} nodrag`} type="button" title="Insert a colour" aria-label="Insert a colour" onClick={() => picker.current?.click()}>
+        <button className={`${styles.colorBtn} nodrag`} type="button" title="Insert a colour" aria-label="Insert a colour" onClick={openPicker}>
           <PaletteIcon />
         </button>
-        <input ref={picker} className={styles.colorInput} type="color" defaultValue="#55ffff" onChange={(e) => insertColor(e.target.value)} tabIndex={-1} aria-hidden="true" />
+        <input ref={picker} className={styles.colorInput} type="color" defaultValue="#55ffff" onChange={(e) => insertColor(e.target.value)} onBlur={() => (live.current = null)} tabIndex={-1} aria-hidden="true" />
       </div>
       <ColorPreview text={value} />
     </div>
