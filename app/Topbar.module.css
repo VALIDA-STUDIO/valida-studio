@@ -11,11 +11,37 @@
 }
 
 .crumbs {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 2px;
   font-size: 14px;
   min-width: 0;
+}
+
+/* primary button on the right */
+.export {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 12px;
+  margin-left: 16px;
+  border-radius: 7px;
+  border: 1px solid var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.12s;
+}
+
+.export:hover {
+  opacity: 0.85;
 }
 
 .root {
