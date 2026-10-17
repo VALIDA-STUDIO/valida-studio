@@ -6,13 +6,14 @@ import "@xyflow/react/dist/style.css";
 import EventNode from "./EventNode";
 import ActionNode from "./ActionNode";
 import ConditionNode from "./ConditionNode";
+import ModifyNode from "./ModifyNode";
 import { ADD_EVENT, DRAG_TYPE, BLOCKS } from "./blocks";
 import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
 
-const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode, condition: ConditionNode };
+const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode, condition: ConditionNode, modify: ModifyNode };
 // kind of each node type, and the colour its connections get
-const KIND = { event: "event", action: "action", broadcast: "action", condition: "condition" };
+const KIND = { event: "event", action: "action", broadcast: "action", condition: "condition", modify: "action" };
 const KIND_COLOR = { command: "var(--kind-command)", event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
 const arrow = { type: "step", animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];

@@ -17,11 +17,4 @@ export const ACTIONS = {
     ],
     paper: "target.sendMessage(message)",
   },
-  cancel_event: {
-    label: "Cancel event",
-    desc: "Stops the event, only for events that can be cancelled",
-    icon: "ban",
-    fields: [],
-    paper: "event.setCancelled(true)",
-  },
 };

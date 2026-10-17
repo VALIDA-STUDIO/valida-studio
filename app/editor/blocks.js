@@ -5,6 +5,7 @@ import { ACTIONS } from "./actions";
 export const BLOCKS = [
   { id: "event", kind: "Events", label: "Event", desc: "Runs when something happens on the server", node: { type: "event", data: { event: "player_join" } } },
   ...Object.entries(CONDITIONS).map(([cond, c]) => ({ id: `cond_${cond}`, kind: "Conditions", label: c.label, desc: c.desc, node: { type: "condition", data: { cond, values: {} } } })),
+  { id: "modify", kind: "Actions", label: "Modify event", desc: "Changes the event: messages, cancel", icon: "wrench", node: { type: "modify", data: { values: {} } } },
   ...Object.entries(ACTIONS).map(([action, a]) => ({ id: `act_${action}`, kind: "Actions", label: a.label, desc: a.desc, icon: a.icon, node: { type: "action", data: { action, values: {} } } })),
 ];
 

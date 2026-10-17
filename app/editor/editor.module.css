@@ -754,3 +754,82 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+/* ---------- modify event ---------- */
+
+.nodeHead .nodeMono {
+  margin: 0 0 0 auto;
+  font-size: 10.5px;
+}
+
+.modRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.modRow + .modRow {
+  margin-top: 10px;
+}
+
+.modRow .nodeToggle {
+  flex: 1;
+  margin-top: 0;
+  min-height: 32px;
+}
+
+.modRow .condField {
+  flex: 1;
+}
+
+.modRemove {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.12s, background 0.12s;
+}
+
+.modRemove:hover {
+  color: var(--fg);
+  background: var(--surface-hover);
+}
+
+.modAdd {
+  margin-top: 10px;
+}
+
+.modAdd .add {
+  margin-top: 0;
+}
+
+/* dashed add button inside nodes */
+.add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 32px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.add:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+  background: var(--surface-hover);
+}

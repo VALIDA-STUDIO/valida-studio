@@ -11,7 +11,7 @@ const ic = { width: 14, height: 14, viewBox: "0 0 24 24", fill: "none", stroke: 
 export const ACTION_ICONS = {
   megaphone: (p) => <svg {...ic} {...p}><path d="m3 11 18-5v12L3 14v-3z" /><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" /></svg>,
   message: (p) => <svg {...ic} {...p}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>,
-  ban: (p) => <svg {...ic} {...p}><circle cx="12" cy="12" r="10" /><path d="m4.9 4.9 14.2 14.2" /></svg>,
+  wrench: (p) => <svg {...ic} {...p}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></svg>,
 };
 
 // An action: its fields, variable chips that insert into the field last used, one "then" output.
