@@ -1,10 +1,9 @@
 "use client";
 
-import { memo, useRef, useState } from "react";
+import { memo, useRef } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useVars, useUpstreamEvent } from "./useVars";
 import VarChips from "./VarChips";
-import NodeSelect from "./NodeSelect";
 import styles from "./editor.module.css";
 
 const WrenchIcon = () => (
@@ -12,32 +11,26 @@ const WrenchIcon = () => (
     <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
   </svg>
 );
-const XIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-    <path d="M18 6 6 18M6 6l12 12" />
-  </svg>
-);
-const PlusIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-    <path d="M12 5v14M5 12h14" />
-  </svg>
-);
 
-// Modify event: changes things on the event upstream. Rows are the event's setters you added.
+// Modify event: every setting of the event upstream as a row with a switch; on = applied.
 function ModifyNode({ id, data, selected }) {
   const { updateNodeData } = useReactFlow();
   const event = useUpstreamEvent(id);
   const vars = useVars(id);
   const values = data.values ?? {};
-  const added = Object.keys(values).filter((k) => event?.setters.some((s) => s.key === k));
-  const available = (event?.setters ?? []).filter((s) => !added.includes(s.key));
+  const setters = event?.setters ?? [];
   const last = useRef(null);
-  const [adding, setAdding] = useState(false);
 
+  const on = (key) => values[key] !== undefined && values[key] !== false;
   const set = (key, v) => updateNodeData(id, { values: { ...values, [key]: v } });
-  const remove = (key) => {
+  // switching a setting on turns off the ones it conflicts with (hide vs. custom message)
+  const toggle = (s) => {
     const next = { ...values };
-    delete next[key];
+    if (on(s.key)) delete next[s.key];
+    else {
+      for (const k of s.excludes ?? []) delete next[k];
+      next[s.key] = s.toggle ? true : "";
+    }
     updateNodeData(id, { values: next });
   };
   const insert = (path) => {
@@ -63,68 +56,34 @@ function ModifyNode({ id, data, selected }) {
           <WrenchIcon />
         </span>
         <span className={styles.nodeKind}>Modify event</span>
-        {event && <span className={styles.nodeMono}>{event.paper}</span>}
       </div>
       <div className={styles.nodeBody}>
-        {!event && <span className={styles.nodeText}>Connect it after an event to see what can be changed.</span>}
+        {!event && <span className={styles.nodeText}>Connect it after an event.</span>}
 
-        {added.map((key) => {
-          const s = event.setters.find((x) => x.key === key);
-          return (
-            <div key={key} className={styles.modRow}>
-              {s.toggle ? (
-                <label className={`${styles.nodeToggle} nodrag`}>
-                  <input type="checkbox" checked={!!values[key]} onChange={(e) => set(key, e.target.checked)} />
-                  <span className={styles.nodeToggleBox} aria-hidden="true" />
-                  {s.label}
-                </label>
-              ) : (
-                <label className={styles.condField} data-wide="">
-                  <span className={styles.nodeLabel}>{s.label}</span>
-                  <input
-                    className={`${styles.nodeInput} nodrag`}
-                    data-key={key}
-                    value={values[key] ?? ""}
-                    onChange={(e) => set(key, e.target.value)}
-                    onFocus={(e) => (last.current = e.target)}
-                    placeholder={s.placeholder}
-                    autoComplete="off"
-                    spellCheck={false}
-                    aria-label={s.label}
-                  />
-                </label>
-              )}
-              <button className={`${styles.modRemove} nodrag`} type="button" aria-label={`Remove ${s.label}`} onClick={() => remove(key)}>
-                <XIcon />
-              </button>
-            </div>
-          );
-        })}
-
-        {event && available.length > 0 && (
-          <div className={styles.modAdd}>
-            {adding ? (
-              <NodeSelect
-                value=""
-                options={[{ id: "", label: "Choose what to change" }, ...available.map((s) => ({ id: s.key, label: s.label }))]}
-                onChange={(key) => {
-                  if (!key) return;
-                  const s = event.setters.find((x) => x.key === key);
-                  set(key, s.toggle ? true : "");
-                  setAdding(false);
-                }}
-                label="What to change"
+        {setters.map((s) => (
+          <div key={s.key} className={styles.modRow} data-on={on(s.key) || undefined}>
+            <label className={`${styles.switchRow} nodrag`}>
+              <input type="checkbox" checked={on(s.key)} onChange={() => toggle(s)} aria-label={s.label} />
+              <span className={styles.switch} aria-hidden="true" />
+              <span className={styles.switchLabel}>{s.label}</span>
+            </label>
+            {s.text && on(s.key) && (
+              <input
+                className={`${styles.nodeInput} nodrag`}
+                data-key={s.key}
+                value={values[s.key] ?? ""}
+                onChange={(e) => set(s.key, e.target.value)}
+                onFocus={(e) => (last.current = e.target)}
+                placeholder={s.placeholder}
+                autoComplete="off"
+                spellCheck={false}
+                aria-label={`${s.label} text`}
               />
-            ) : (
-              <button className={`${styles.add} nodrag`} type="button" onClick={() => setAdding(true)}>
-                <PlusIcon />
-                Add
-              </button>
             )}
           </div>
-        )}
+        ))}
 
-        {vars.length > 0 && added.some((k) => event.setters.find((s) => s.key === k)?.vars) && <VarChips vars={vars} onInsert={insert} />}
+        {vars.length > 0 && setters.some((s) => s.vars && on(s.key)) && <VarChips vars={vars} onInsert={insert} />}
       </div>
       <div className={styles.nodeOutputs}>
         <div className={styles.nodeOutput} data-flow="">
