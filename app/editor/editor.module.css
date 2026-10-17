@@ -39,7 +39,9 @@
 /* ---------- command node ---------- */
 
 .node {
-  width: 280px;
+  width: max-content;
+  min-width: 280px;
+  max-width: 560px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--card-bg);
@@ -823,22 +825,66 @@
 
 /* ---------- message field with colours ---------- */
 
-.msgWrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
+/* the field is transparent and sits on top of a painted copy of its text */
 .msgBox {
   position: relative;
+  display: grid;
+}
+
+.msgBackdrop {
+  position: absolute;
+  inset: 0;
+  padding: 9px 34px 9px 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  color: var(--fg);
+  pointer-events: none;
+}
+
+.msgBox:not([data-area]) .msgBackdrop {
+  padding: 0 34px 0 11px;
+  line-height: 30px;
+  white-space: pre;
+}
+
+.msgTag {
+  opacity: 0.45;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+}
+
+.msgArea,
+.msgInput {
+  position: relative;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--fg);
 }
 
 .msgArea {
+  min-width: 100%;
+  min-height: 72px;
   padding-right: 34px;
+  resize: both;
 }
 
 .msgInput {
   padding-right: 34px;
+}
+
+.msgArea::selection,
+.msgInput::selection {
+  background: color-mix(in srgb, var(--fg) 25%, transparent);
+}
+
+.msgBox:focus-within .msgBackdrop {
+  border-color: transparent;
 }
 
 .colorBtn {
@@ -870,18 +916,6 @@
   height: 24px;
   opacity: 0;
   pointer-events: none;
-}
-
-/* how the message looks in game: colour tags applied, tags hidden */
-.preview {
-  padding: 6px 10px;
-  border-radius: 7px;
-  background: var(--tag-bg);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 12px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
 }
 
 /* dashed add button inside nodes */

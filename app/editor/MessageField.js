@@ -12,43 +12,35 @@ const PaletteIcon = () => (
 
 const TAG = /<#([0-9a-fA-F]{6})>/g;
 
-// Text with Minecraft colours: <#ff5555> tags colour everything after them. The preview shows the result,
-// the palette button inserts a tag at the cursor.
-export function ColorPreview({ text }) {
-  if (!text) return null;
-  const parts = [];
+// The text split into coloured runs; tags stay visible but dimmed, text after a tag takes its colour.
+function runs(text) {
+  const out = [];
   let color = null;
   let last = 0;
   for (const m of text.matchAll(TAG)) {
-    if (m.index > last) parts.push({ text: text.slice(last, m.index), color });
+    if (m.index > last) out.push({ text: text.slice(last, m.index), color });
     color = "#" + m[1];
+    out.push({ text: m[0], color, tag: true });
     last = m.index + m[0].length;
   }
-  if (last < text.length) parts.push({ text: text.slice(last), color });
-  if (!parts.some((p) => p.color)) return null;
-  return (
-    <div className={styles.preview} aria-label="Preview">
-      {parts.map((p, i) => (
-        <span key={i} style={p.color ? { color: p.color } : undefined}>
-          {p.text}
-        </span>
-      ))}
-    </div>
-  );
+  if (last < text.length) out.push({ text: text.slice(last), color });
+  return out;
 }
 
+// Message field with Minecraft colours: <#ff5555> tags colour the text right in the field.
+// The palette button inserts a tag at the cursor; the field can be resized in both directions.
 export default function MessageField({ value, onChange, placeholder, dataKey, onFocus, area = true, label }) {
   const field = useRef(null);
   const picker = useRef(null);
-  const live = useRef(null); // the tag being picked right now: { start, end }, replaced on every move
+  const backdrop = useRef(null);
+  const live = useRef(null); // the tag being picked right now, replaced on every move
 
-  // the picker fires on every move; the first one inserts a tag, the rest update that same tag
   const insertColor = (hex) => {
     const el = field.current;
     const text = value ?? "";
     const tag = `<${hex}>`;
     let start, end;
-    if (live.current && text.slice(live.current.start, live.current.end).match(/^<#[0-9a-fA-F]{6}>$/)) ({ start, end } = live.current);
+    if (live.current && /^<#[0-9a-fA-F]{6}>$/.test(text.slice(live.current.start, live.current.end))) ({ start, end } = live.current);
     else {
       start = el?.selectionStart ?? text.length;
       end = el?.selectionEnd ?? text.length;
@@ -62,27 +54,35 @@ export default function MessageField({ value, onChange, placeholder, dataKey, on
     picker.current?.click();
   };
 
+  const text = value ?? "";
   const common = {
     ref: field,
     "data-key": dataKey,
-    value: value ?? "",
+    value: text,
     onChange: (e) => onChange(e.target.value),
     onFocus,
+    onScroll: (e) => backdrop.current && (backdrop.current.scrollTop = e.target.scrollTop),
     placeholder,
     spellCheck: false,
     "aria-label": label,
   };
 
   return (
-    <div className={styles.msgWrap}>
-      <div className={styles.msgBox}>
-        {area ? <textarea className={`${styles.nodeTextarea} ${styles.msgArea} nodrag nowheel`} rows={2} maxLength={300} {...common} /> : <input className={`${styles.nodeInput} ${styles.msgInput} nodrag`} autoComplete="off" {...common} />}
-        <button className={`${styles.colorBtn} nodrag`} type="button" title="Insert a colour" aria-label="Insert a colour" onClick={openPicker}>
-          <PaletteIcon />
-        </button>
-        <input ref={picker} className={styles.colorInput} type="color" defaultValue="#55ffff" onChange={(e) => insertColor(e.target.value)} onBlur={() => (live.current = null)} tabIndex={-1} aria-hidden="true" />
+    <div className={styles.msgBox} data-area={area || undefined}>
+      {/* painted copy of the text behind the transparent field */}
+      <div ref={backdrop} className={styles.msgBackdrop} aria-hidden="true">
+        {runs(text).map((r, i) => (
+          <span key={i} className={r.tag ? styles.msgTag : undefined} style={r.color && !r.tag ? { color: r.color } : undefined}>
+            {r.text}
+          </span>
+        ))}
+        {text.endsWith("\n") ? "​" : null}
       </div>
-      <ColorPreview text={value} />
+      {area ? <textarea className={`${styles.nodeTextarea} ${styles.msgArea} nodrag nowheel`} rows={2} maxLength={300} {...common} /> : <input className={`${styles.nodeInput} ${styles.msgInput} nodrag`} autoComplete="off" {...common} />}
+      <button className={`${styles.colorBtn} nodrag`} type="button" title="Insert a colour" aria-label="Insert a colour" onClick={openPicker}>
+        <PaletteIcon />
+      </button>
+      <input ref={picker} className={styles.colorInput} type="color" defaultValue="#55ffff" onChange={(e) => insertColor(e.target.value)} onBlur={() => (live.current = null)} tabIndex={-1} aria-hidden="true" />
     </div>
   );
 }
