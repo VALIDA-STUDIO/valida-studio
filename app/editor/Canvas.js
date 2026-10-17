@@ -8,12 +8,11 @@ import ActionNode from "./ActionNode";
 import ConditionNode from "./ConditionNode";
 import ModifyNode from "./ModifyNode";
 import FlowEdge from "./FlowEdge";
-import GroupNode from "./GroupNode";
 import { ADD_EVENT, DRAG_TYPE, BLOCKS } from "./blocks";
 import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
 
-const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode, condition: ConditionNode, modify: ModifyNode, group: GroupNode };
+const nodeTypes = { event: EventNode, action: ActionNode, broadcast: ActionNode, condition: ConditionNode, modify: ModifyNode };
 // kind of each node type, and the colour its connections get
 const KIND = { event: "event", action: "action", broadcast: "action", condition: "condition", modify: "action" };
 const KIND_COLOR = { command: "var(--kind-command)", event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
@@ -27,7 +26,7 @@ const newId = () => "n_" + Math.random().toString(36).slice(2, 8);
 
 // what gets stored: nodes with their data, edges with their handles
 const serialize = (nodes, edges) => ({
-  nodes: nodes.map(({ id, type, position, data, parentId, width, height }) => ({ id, type, position, data, ...(parentId ? { parentId } : {}), ...(type === "group" ? { width, height } : {}) })),
+  nodes: nodes.map(({ id, type, position, data }) => ({ id, type, position, data })),
   edges: edges.map(({ id, source, sourceHandle, target }) => ({ id, source, sourceHandle, target })),
 });
 
@@ -64,64 +63,14 @@ function Flow({ projectId, initial }) {
   const [over, setOver] = useState(false);
   const { screenToFlowPosition } = useReactFlow();
 
-  const { getIntersectingNodes, getNodes } = useReactFlow();
-
-  // the group a point sits in, if any
-  const groupAt = useCallback(
-    (pos) =>
-      getNodes().find((g) => {
-        if (g.type !== "group") return false;
-        const w = g.measured?.width ?? g.width ?? 0;
-        const h = g.measured?.height ?? g.height ?? 0;
-        return pos.x >= g.position.x && pos.x <= g.position.x + w && pos.y >= g.position.y && pos.y <= g.position.y + h;
-      }),
-    [getNodes]
-  );
-
-  // `at` is where the pointer was (decides the group); `position` is the block's top-left
   const add = useCallback(
-    (blockId, position, at = position) => {
+    (blockId, position) => {
       const block = BLOCKS.find((b) => b.id === blockId);
       if (!block) return;
       const id = newId();
-      const group = block.node.type === "group" ? null : groupAt(at);
-      const node = {
-        id,
-        type: block.node.type,
-        position: group ? { x: position.x - group.position.x, y: position.y - group.position.y } : position,
-        data: structuredClone(block.node.data),
-        selected: true,
-        ...(group ? { parentId: group.id } : {}),
-        ...(block.node.width ? { width: block.node.width, height: block.node.height } : {}),
-      };
-      setNodes((ns) => {
-        const rest = ns.map((n) => ({ ...n, selected: false }));
-        // groups go first so their children can refer to them
-        return node.type === "group" ? [node, ...rest] : [...rest, node];
-      });
+      setNodes((ns) => ns.map((n) => ({ ...n, selected: false })).concat({ id, type: block.node.type, position, data: structuredClone(block.node.data), selected: true }));
     },
-    [setNodes, groupAt]
-  );
-
-  // after dragging a block: adopt it into the group it landed in, or release it
-  const onNodeDragStop = useCallback(
-    (_, node) => {
-      if (node.type === "group") return;
-      const hits = getIntersectingNodes(node).filter((n) => n.type === "group");
-      const group = hits[0] ?? null;
-      setNodes((ns) => {
-        const parent = node.parentId ? ns.find((n) => n.id === node.parentId) : null;
-        const abs = parent ? { x: node.position.x + parent.position.x, y: node.position.y + parent.position.y } : node.position;
-        if (group && group.id !== node.parentId) {
-          return ns.map((n) => (n.id === node.id ? { ...n, parentId: group.id, position: { x: abs.x - group.position.x, y: abs.y - group.position.y } } : n));
-        }
-        if (!group && node.parentId) {
-          return ns.map((n) => (n.id === node.id ? { ...n, parentId: undefined, position: abs } : n));
-        }
-        return ns;
-      });
-    },
-    [getIntersectingNodes, setNodes]
+    [setNodes]
   );
 
   // click in the sidebar: drop the block near the middle of the view
@@ -164,7 +113,7 @@ function Flow({ projectId, initial }) {
     setOver(false);
     if (!blockId) return;
     e.preventDefault();
-    add(blockId, screenToFlowPosition({ x: e.clientX - 120, y: e.clientY - 20 }), screenToFlowPosition({ x: e.clientX, y: e.clientY }));
+    add(blockId, screenToFlowPosition({ x: e.clientX - 120, y: e.clientY - 20 }));
   };
 
   return (
@@ -176,7 +125,6 @@ function Flow({ projectId, initial }) {
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       onNodesChange={onNodesChange}
-      onNodeDragStop={onNodeDragStop}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
       isValidConnection={isValidConnection}
@@ -213,8 +161,7 @@ export default function Canvas({ projectId, graph }) {
     () => ({
       nodes: (Array.isArray(graph?.nodes) ? graph.nodes : [])
         .filter((n) => nodeTypes[n.type])
-        .map((n) => (n.type === "broadcast" ? { ...n, type: "action", data: { action: "broadcast", values: { message: n.data?.message ?? "" } } } : n))
-        .sort((a, b) => (a.type === "group" ? 0 : 1) - (b.type === "group" ? 0 : 1)),
+        .map((n) => (n.type === "broadcast" ? { ...n, type: "action", data: { action: "broadcast", values: { message: n.data?.message ?? "" } } } : n)),
       edges: (Array.isArray(graph?.edges) ? graph.edges : []).map((e) => ({ ...e, ...arrow })),
     }),
     [graph]
