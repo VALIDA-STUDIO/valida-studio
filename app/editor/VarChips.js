@@ -20,7 +20,6 @@ const BackIcon = () => (
 export default function VarChips({ vars, onInsert }) {
   const [open, setOpen] = useState(null); // { path: ["player"], type: "Player" }
   const [arg, setArg] = useState(""); // number for slot(n)
-  const [q, setQ] = useState("");
   const ref = useRef(null);
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export default function VarChips({ vars, onInsert }) {
     onInsert(path.join("."));
     setOpen(null);
     setArg("");
-    setQ("");
   };
   const go = (key, prop) => {
     const seg = prop.arg ? `${key}(${arg === "" ? prop.arg.placeholder : arg})` : key;
@@ -83,9 +81,7 @@ export default function VarChips({ vars, onInsert }) {
             <span className={styles.varType}>use this</span>
           </button>
           <div className={styles.varSep} />
-          <input className={`${styles.varSearch} nodrag`} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search" aria-label="Search properties" autoFocus autoComplete="off" spellCheck={false} />
-          {Object.entries(TYPES[open.type]).filter(([key]) => key.toLowerCase().includes(q.trim().toLowerCase())).length === 0 && <span className={styles.varEmpty}>Nothing matches.</span>}
-          {Object.entries(TYPES[open.type]).filter(([key]) => key.toLowerCase().includes(q.trim().toLowerCase())).map(([key, prop]) => (
+          {Object.entries(TYPES[open.type]).map(([key, prop]) => (
             <div key={key} className={styles.varRow}>
               {prop.arg && (
                 <input
