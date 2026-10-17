@@ -10,6 +10,19 @@ const isProjectPage = (p) => p === "/";
 const segments = () => [];
 
 // Vercel-style slash between breadcrumb items
+const UndoIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 7v6h6" />
+    <path d="M21 17a9 9 0 0 0-15-6.7L3 13" />
+  </svg>
+);
+const RedoIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M21 7v6h-6" />
+    <path d="M3 17a9 9 0 0 1 15-6.7L21 13" />
+  </svg>
+);
+
 const DownloadIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M12 3v12M7 10l5 5 5-5M4 19h16" />
@@ -51,14 +64,21 @@ export default function Topbar({ projects, activeId }) {
         ))}
       </nav>
 
-      {/* right side: export (not wired yet) */}
-      <button className={styles.export} type="button" title="Build the plugin and download it">
-        <span className={styles.exportIcon}>
+      {/* right side: history + export (not wired yet) */}
+      <div className={styles.actions}>
+        <div className={styles.history} role="group" aria-label="History">
+          <button className={styles.iconBtn} type="button" title="Undo (⌘Z)" aria-label="Undo">
+            <UndoIcon />
+          </button>
+          <button className={styles.iconBtn} type="button" title="Redo (⇧⌘Z)" aria-label="Redo">
+            <RedoIcon />
+          </button>
+        </div>
+        <button className={styles.export} type="button" title="Build the plugin and download it">
           <DownloadIcon />
-        </span>
-        Export
-        <code className={styles.exportTag}>.jar</code>
-      </button>
+          Export .jar
+        </button>
+      </div>
     </header>
   );
 }
