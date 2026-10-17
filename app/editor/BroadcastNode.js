@@ -1,7 +1,8 @@
 "use client";
 
-import { memo } from "react";
-import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { memo, useRef } from "react";
+import { Handle, Position, useReactFlow, useNodeConnections, useNodesData } from "@xyflow/react";
+import { EVENTS } from "./events";
 import styles from "./editor.module.css";
 
 const MegaphoneIcon = () => (
@@ -11,9 +12,29 @@ const MegaphoneIcon = () => (
   </svg>
 );
 
-// Broadcast: sends a message to everyone online. {variables} from the event can be used.
+// Broadcast: sends a message to everyone online. Variables of the connected event can be inserted.
 function BroadcastNode({ id, data, selected }) {
   const { updateNodeData } = useReactFlow();
+  const field = useRef(null);
+
+  // variables offered by whatever event feeds this block
+  const incoming = useNodeConnections({ handleType: "target" });
+  const sources = useNodesData(incoming.map((c) => c.source));
+  const vars = sources.flatMap((n) => (n?.type === "event" ? (EVENTS[n.data?.event]?.outputs ?? []) : []));
+
+  const insert = (name) => {
+    const el = field.current;
+    const text = data.message ?? "";
+    const start = el?.selectionStart ?? text.length;
+    const end = el?.selectionEnd ?? text.length;
+    const next = text.slice(0, start) + `{${name}}` + text.slice(end);
+    updateNodeData(id, { message: next });
+    requestAnimationFrame(() => {
+      el?.focus();
+      const pos = start + name.length + 2;
+      el?.setSelectionRange(pos, pos);
+    });
+  };
 
   return (
     <div className={styles.node} data-kind="action" data-selected={selected || undefined}>
@@ -25,16 +46,29 @@ function BroadcastNode({ id, data, selected }) {
         <span className={styles.nodeKind}>Broadcast</span>
       </div>
       <div className={styles.nodeBody}>
-        <input
-          className={`${styles.nodeInput} nodrag`}
+        <label className={styles.nodeLabel} htmlFor={`${id}-message`}>
+          Message
+        </label>
+        <textarea
+          id={`${id}-message`}
+          ref={field}
+          className={`${styles.nodeTextarea} nodrag nowheel`}
           value={data.message ?? ""}
           onChange={(e) => updateNodeData(id, { message: e.target.value })}
-          placeholder="{player} joined the server"
-          maxLength={200}
-          autoComplete="off"
+          placeholder="Welcome, {player}!"
+          maxLength={300}
+          rows={2}
           spellCheck={false}
-          aria-label="Message"
         />
+        {vars.length > 0 && (
+          <div className={styles.vars}>
+            {vars.map((v) => (
+              <button key={v.id} className={`${styles.var} ${styles.varBtn} nodrag`} type="button" onClick={() => insert(v.id)} title="Insert">
+                {`{${v.id}}`}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div className={styles.nodeOutputs}>
         <div className={styles.nodeOutput} data-flow="">
