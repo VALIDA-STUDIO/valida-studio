@@ -19,62 +19,51 @@
   min-width: 0;
 }
 
-/* primary button on the right */
+/* primary button on the right: icon tile, label, and the file type as a small tag */
 .export {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  height: 32px;
-  padding: 0 12px;
+  gap: 8px;
+  height: 34px;
+  padding: 0 10px 0 5px;
   margin-left: 16px;
-  border-radius: 7px;
+  border-radius: 9px;
   border: 1px solid var(--fg);
   background: var(--fg);
   color: var(--bg);
   font: inherit;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   cursor: pointer;
   flex-shrink: 0;
-  transition: opacity 0.12s;
+  transition: opacity 0.12s, transform 0.12s;
 }
 
 .export:hover {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
-.root {
-  display: inline-flex;
-  align-items: center;
-  height: 32px;
-  padding: 0 8px;
-  margin-left: -8px;
-  border-radius: 6px;
-  font-weight: 500;
-  color: var(--fg);
-  transition: background 0.12s;
+.export:active {
+  transform: translateY(1px);
 }
 
-.root:hover {
-  background: var(--surface-hover);
-}
-
-.sep {
+.exportIcon {
   display: grid;
   place-items: center;
-  color: var(--border-strong);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--bg) 14%, transparent);
 }
 
-.current {
+.exportTag {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--bg) 14%, transparent);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11.5px;
   font-weight: 500;
-  color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* wrapper for "sep + label" pairs; children lay out as direct flex items */
-.tail {
-  display: contents;
+  letter-spacing: 0;
 }

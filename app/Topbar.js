@@ -52,9 +52,12 @@ export default function Topbar({ projects, activeId }) {
       </nav>
 
       {/* right side: export (not wired yet) */}
-      <button className={styles.export} type="button" title="Export the plugin as a .jar">
-        <DownloadIcon />
-        Export .jar
+      <button className={styles.export} type="button" title="Build the plugin and download it">
+        <span className={styles.exportIcon}>
+          <DownloadIcon />
+        </span>
+        Export
+        <code className={styles.exportTag}>.jar</code>
       </button>
     </header>
   );
