@@ -6,8 +6,8 @@ import ProjectSwitcher from "./ProjectSwitcher";
 import styles from "./Topbar.module.css";
 
 // Pages that sit inside a project show the switcher; none have their own label yet.
-const isProjectPage = (p) => p === "/";
-const segments = () => [];
+const isProjectPage = (p) => p === "/" || p === "/project/settings";
+const segments = (p) => (p === "/project/settings" ? ["Project Settings"] : []);
 
 // Vercel-style slash between breadcrumb items
 const UndoIcon = () => (

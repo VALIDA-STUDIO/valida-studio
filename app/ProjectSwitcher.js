@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import ProjectIcon from "./ProjectIcon";
 import CreateProjectForm from "./CreateProjectForm";
 import { deleteProject, setActiveProject } from "./projects/actions";
@@ -35,6 +36,13 @@ const CheckIcon = () => (
   </svg>
 );
 
+const GearIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
 const TrashIcon = () => (
   <svg {...stroke} width="14" height="14">
     <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
@@ -47,6 +55,7 @@ export default function ProjectSwitcher({ projects, activeId }) {
   const [confirmId, setConfirmId] = useState(null);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
   const ref = useRef(null);
 
   const close = () => {
@@ -72,6 +81,15 @@ export default function ProjectSwitcher({ projects, activeId }) {
   const pick = (id) => {
     close();
     if (id !== activeId) startTransition(() => setActiveProject(id));
+  };
+
+  // gear: make it the active project and open its settings page
+  const openSettings = (id) => {
+    close();
+    startTransition(async () => {
+      if (id !== activeId) await setActiveProject(id);
+      router.push("/project/settings");
+    });
   };
 
   const startCreate = () => {
@@ -166,15 +184,20 @@ export default function ProjectSwitcher({ projects, activeId }) {
                       </span>
                     )}
                   </button>
-                  <button
-                    className={styles.trash}
-                    type="button"
-                    aria-label={`Delete ${p.name}`}
+                  <span className={styles.rowActions}>
+                    <button className={styles.rowBtn} type="button" aria-label={`Settings of ${p.name}`} title="Project settings" onClick={() => openSettings(p.id)}>
+                      <GearIcon />
+                    </button>
+                    <button
+                      className={`${styles.rowBtn} ${styles.trash}`}
+                      type="button"
+                      aria-label={`Delete ${p.name}`}
                     title="Delete project"
                     onClick={() => setConfirmId(p.id)}
                   >
-                    <TrashIcon />
-                  </button>
+                      <TrashIcon />
+                    </button>
+                  </span>
                 </li>
               )
             )}

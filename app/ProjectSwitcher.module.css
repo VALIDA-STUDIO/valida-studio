@@ -108,12 +108,24 @@
   position: relative;
 }
 
-/* trash sits over the row's right edge; only visible on hover/focus */
-.trash {
+/* row actions (settings + delete) sit over the row's right edge; only visible on hover/focus */
+.rowActions {
   position: absolute;
   top: 50%;
-  right: 8px;
+  right: 6px;
+  display: inline-flex;
+  gap: 2px;
   transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.row:hover .rowActions,
+.rowActions:focus-within {
+  opacity: 1;
+}
+
+.rowBtn {
   display: grid;
   place-items: center;
   width: 26px;
@@ -123,13 +135,12 @@
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.12s, color 0.12s, background 0.12s;
+  transition: color 0.12s, background 0.12s;
 }
 
-.row:hover .trash,
-.trash:focus-visible {
-  opacity: 1;
+.rowBtn:hover {
+  color: var(--fg);
+  background: var(--surface-hover);
 }
 
 .trash:hover {
@@ -139,7 +150,7 @@
 
 /* make room for the trash when hovering, so it never overlaps the check */
 .row:hover .item {
-  padding-right: 38px;
+  padding-right: 64px;
 }
 
 .item {
