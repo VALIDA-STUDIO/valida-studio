@@ -63,7 +63,7 @@ function EventPicker({ value, onChange }) {
   );
 }
 
-// An event: pick which one in the node; outputs are "then" plus what the event hands over.
+// An event: pick which one in the node, see the variables it provides, one "then" output.
 function EventNode({ id, data, selected }) {
   const { updateNodeData } = useReactFlow();
   const event = EVENTS[data.event] ?? EVENTS[DEFAULT_EVENT];
@@ -78,18 +78,18 @@ function EventNode({ id, data, selected }) {
       </div>
       <div className={styles.nodeBody}>
         <EventPicker value={event.id} onChange={(v) => updateNodeData(id, { event: v })} />
+        {/* variables the next blocks can use */}
+        <div className={styles.vars}>
+          {event.outputs.map((o) => (
+            <span key={o.id} className={styles.var}>{`{${o.id}}`}</span>
+          ))}
+        </div>
       </div>
       <div className={styles.nodeOutputs}>
         <div className={styles.nodeOutput} data-flow="">
           <span>then</span>
           <Handle type="source" position={Position.Right} id="then" className={styles.handle} />
         </div>
-        {event.outputs.map((o) => (
-          <div key={o.id} className={styles.nodeOutput}>
-            <span>{o.label}</span>
-            <Handle type="source" position={Position.Right} id={o.id} className={`${styles.handle} ${styles.handleData}`} />
-          </div>
-        ))}
       </div>
     </div>
   );
