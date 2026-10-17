@@ -29,7 +29,9 @@
   color: var(--border-strong);
 }
 
-.inputWide {
+/* .field is a column flex box; the shared input has flex: 1, so pin its size here */
+.field .inputWide {
+  flex: none;
   width: 100%;
   height: 40px;
   padding: 0 12px;
