@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import styles from "./UserMenu.module.css";
 
 const icon = {
@@ -26,6 +27,14 @@ export const PLANS = {
   pro: "Pro",
   enterprise: "Enterprise",
 };
+
+const TeamIcon = () => (
+  <svg {...icon}>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
 
 const LogoutIcon = () => (
   <svg {...icon}>
@@ -56,6 +65,12 @@ export default function UserMenu({ name, avatar, plan = "standard" }) {
     <div className={styles.wrap} ref={ref}>
       {open && (
         <div className={styles.menu} role="menu">
+          <Link className={styles.item} href="/team" role="menuitem" onClick={() => setOpen(false)}>
+            <span className={styles.iconBox}>
+              <TeamIcon />
+            </span>
+            Team panel
+          </Link>
           <form action="/auth/logout" method="post">
             <button className={styles.item} type="submit" role="menuitem">
               <span className={styles.iconBox}>
