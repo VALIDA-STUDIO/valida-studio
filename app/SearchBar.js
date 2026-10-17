@@ -51,41 +51,40 @@ export default function SearchBar() {
     };
   }, [open]);
 
+  const Current = FILTERS.find((f) => f.id === filter).Icon;
+
   return (
-    <div className={styles.wrap}>
-      <label className={styles.search}>
+    <div className={styles.wrap} ref={ref}>
+      <div className={styles.search} data-open={open || undefined}>
         <SearchIcon />
         <input type="search" placeholder="Search" aria-label="Search" autoComplete="off" spellCheck={false} />
-        <kbd className={styles.kbd}>⌘K</kbd>
-      </label>
-
-      <div className={styles.dropdown} ref={ref}>
-        <button className={styles.trigger} data-open={open || undefined} type="button" onClick={() => setOpen((v) => !v)} aria-haspopup="menu" aria-expanded={open}>
-          <span className={styles.icon}>{(() => { const F = FILTERS.find((f) => f.id === filter).Icon; return <F />; })()}</span>
-          <span className={styles.triggerValue}>{filter}</span>
+        {/* filter chip inside the field */}
+        <button className={styles.chip} data-open={open || undefined} type="button" onClick={() => setOpen((v) => !v)} aria-haspopup="menu" aria-expanded={open} aria-label={`Filter: ${filter}`}>
+          <Current />
+          {filter}
           <span className={styles.chevron}>
             <ChevronIcon />
           </span>
         </button>
-
-        {open && (
-          <div className={styles.menu} role="menu">
-            {FILTERS.map(({ id: f, Icon }) => (
-              <button key={f} className={styles.item} type="button" role="menuitemradio" aria-checked={filter === f} data-on={filter === f || undefined} onClick={() => (setFilter(f), setOpen(false))}>
-                <span className={styles.icon}>
-                  <Icon />
-                </span>
-                {f}
-                {filter === f && (
-                  <span className={styles.check}>
-                    <CheckIcon />
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
+
+      {open && (
+        <div className={styles.menu} role="menu">
+          {FILTERS.map(({ id: f, Icon }) => (
+            <button key={f} className={styles.item} type="button" role="menuitemradio" aria-checked={filter === f} data-on={filter === f || undefined} onClick={() => (setFilter(f), setOpen(false))}>
+              <span className={styles.icon}>
+                <Icon />
+              </span>
+              {f}
+              {filter === f && (
+                <span className={styles.check}>
+                  <CheckIcon />
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
