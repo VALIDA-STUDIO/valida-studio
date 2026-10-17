@@ -73,7 +73,7 @@
 }
 
 .star[data-plan="enterprise"] {
-  filter: hue-rotate(280deg); /* green */
+  filter: none; /* blue, the original star */
 }
 
 /* plan name under the user name: small square tag */
