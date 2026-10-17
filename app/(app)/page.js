@@ -1,4 +1,6 @@
-// Nothing here yet.
+import Canvas from "../editor/Canvas";
+
+// Home: the (still empty) node canvas.
 export default function Home() {
-  return null;
+  return <Canvas />;
 }

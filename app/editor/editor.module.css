@@ -1,0 +1,38 @@
+/* fills the content area under the 56px top bar */
+.wrap {
+  height: calc(100dvh - 56px);
+  min-height: 420px;
+}
+
+/* React Flow theme hooks → our tokens */
+.flow {
+  --xy-background-color: var(--bg);
+  --xy-background-pattern-color: var(--border-strong);
+  --xy-edge-stroke: var(--muted);
+  --xy-edge-stroke-selected: var(--fg);
+  --xy-edge-stroke-width: 1.5;
+  --xy-connectionline-stroke: var(--fg);
+  --xy-handle-background-color: var(--bg);
+  --xy-handle-border-color: var(--fg);
+  --xy-controls-button-background-color: var(--card-bg);
+  --xy-controls-button-background-color-hover: var(--surface-hover);
+  --xy-controls-button-color: var(--muted);
+  --xy-controls-button-color-hover: var(--fg);
+  --xy-controls-button-border-color: var(--border);
+  --xy-controls-box-shadow: none;
+  --xy-minimap-background-color: var(--card-bg);
+  --xy-minimap-mask-background-color: color-mix(in srgb, var(--bg) 70%, transparent);
+  --xy-minimap-node-background-color: var(--border-strong);
+  --xy-minimap-node-stroke-color: transparent;
+  --xy-selection-background-color: color-mix(in srgb, var(--fg) 6%, transparent);
+  --xy-selection-border: 1px solid var(--border-strong);
+  --xy-attribution-background-color: transparent;
+}
+
+.flow :global(.react-flow__minimap),
+.flow :global(.react-flow__controls) {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
