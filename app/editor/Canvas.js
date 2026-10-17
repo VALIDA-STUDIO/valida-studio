@@ -92,9 +92,9 @@ function Flow({ projectId, initial }) {
     });
   }, [nodes, edges]);
 
-  // one connection per output, never into itself
+  // an output may feed several blocks (they all run); never into itself, no duplicate line
   const isValidConnection = useCallback(
-    (c) => c.source !== c.target && !edges.some((e) => e.source === c.source && (e.sourceHandle ?? null) === (c.sourceHandle ?? null)),
+    (c) => c.source !== c.target && !edges.some((e) => e.source === c.source && (e.sourceHandle ?? null) === (c.sourceHandle ?? null) && e.target === c.target),
     [edges]
   );
   const onConnect = useCallback((c) => setEdges((es) => addEdge({ ...c, ...arrow }, es)), [setEdges]);
