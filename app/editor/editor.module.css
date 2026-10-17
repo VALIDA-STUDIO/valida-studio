@@ -327,15 +327,20 @@
   --xy-background-pattern-color: var(--border-strong);
 }
 
-/* empty canvas hint */
-.hint {
-  margin: 16px;
-  padding: 6px 12px;
+/* empty canvas hint, centred */
+.emptyHint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 7px 14px;
   border-radius: 999px;
   border: 1px dashed var(--border-strong);
   background: var(--card-bg);
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--muted);
+  pointer-events: none;
+  z-index: 4;
 }
 
 /* ---------- action nodes ---------- */

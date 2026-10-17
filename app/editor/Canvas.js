@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ProjectVarsContext, ProjectIdContext } from "./useVars";
-import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, MiniMap, Panel, MarkerType, ConnectionLineType, addEdge, useNodesState, useEdgesState, useReactFlow } from "@xyflow/react";
+import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, MarkerType, ConnectionLineType, addEdge, useNodesState, useEdgesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import EventNode from "./EventNode";
 import ActionNode from "./ActionNode";
@@ -225,11 +225,10 @@ function Flow({ projectId, initial }) {
     >
       <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
       <Controls showInteractive={false} />
-      <MiniMap pannable zoomable />
       {nodes.length === 0 && (
-        <Panel position="bottom-center" className={styles.hint}>
+        <div className={styles.emptyHint} aria-hidden="true">
           Drag a block from the left, or click one.
-        </Panel>
+        </div>
       )}
     </ReactFlow>
   );
