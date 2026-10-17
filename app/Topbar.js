@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import ProjectSwitcher from "./ProjectSwitcher";
 import styles from "./Topbar.module.css";
@@ -50,6 +51,14 @@ export default function Topbar({ projects, activeId }) {
   const pathname = usePathname();
   const crumbs = segments(pathname);
 
+  // the canvas reports whether there is something to undo / redo
+  const [history, setHistory] = useState({ canUndo: false, canRedo: false });
+  useEffect(() => {
+    const on = (e) => setHistory(e.detail);
+    window.addEventListener("valida:history", on);
+    return () => window.removeEventListener("valida:history", on);
+  }, []);
+
   return (
     <header className={styles.bar}>
       <nav className={styles.crumbs} aria-label="Breadcrumb">
@@ -74,10 +83,10 @@ export default function Topbar({ projects, activeId }) {
 
       {/* right side: history + export (not wired yet) */}
       <div className={styles.actions} role="group" aria-label="Actions">
-        <button className={styles.iconBtn} type="button" title="Undo (⌘Z)" aria-label="Undo">
+        <button className={styles.iconBtn} type="button" title="Undo (⌘Z)" aria-label="Undo" disabled={!history.canUndo} onClick={() => window.dispatchEvent(new Event("valida:undo"))}>
           <UndoIcon />
         </button>
-        <button className={styles.iconBtn} type="button" title="Redo (⇧⌘Z)" aria-label="Redo">
+        <button className={styles.iconBtn} type="button" title="Redo (⇧⌘Z)" aria-label="Redo" disabled={!history.canRedo} onClick={() => window.dispatchEvent(new Event("valida:redo"))}>
           <RedoIcon />
         </button>
         <span className={styles.divider} aria-hidden="true" />

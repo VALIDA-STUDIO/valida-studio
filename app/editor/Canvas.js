@@ -24,6 +24,14 @@ const snapGrid = [8, 8];
 const connectionLineStyle = { strokeDasharray: "6 4" };
 const newId = () => "n_" + Math.random().toString(36).slice(2, 8);
 
+// graph JSON → nodes/edges React Flow can render
+const hydrate = (graph) => ({
+  nodes: (Array.isArray(graph?.nodes) ? graph.nodes : [])
+    .filter((n) => nodeTypes[n.type])
+    .map((n) => (n.type === "broadcast" ? { ...n, type: "action", data: { action: "broadcast", values: { message: n.data?.message ?? "" } } } : n)),
+  edges: (Array.isArray(graph?.edges) ? graph.edges : []).map((e) => ({ ...e, ...arrow })),
+});
+
 // what gets stored: nodes with their data, edges with their handles
 const serialize = (nodes, edges) => ({
   nodes: nodes.map(({ id, type, position, data }) => ({ id, type, position, data })),
@@ -37,6 +45,76 @@ function Flow({ projectId, initial }) {
   // silent autosave: 600 ms after the last change; whatever is pending is flushed when leaving
   const json = useMemo(() => JSON.stringify(serialize(nodes, edges)), [nodes, edges]);
   const first = useRef(true);
+
+  // undo / redo: snapshots of the graph; quick successive edits (typing) merge into one step
+  const past = useRef([]);
+  const future = useRef([]);
+  const lastJson = useRef(json);
+  const lastPush = useRef(0);
+  const applying = useRef(false);
+  const announce = () => window.dispatchEvent(new CustomEvent("valida:history", { detail: { canUndo: past.current.length > 0, canRedo: future.current.length > 0 } }));
+  useEffect(() => {
+    if (json === lastJson.current) return;
+    if (applying.current) {
+      applying.current = false;
+      lastJson.current = json;
+      return;
+    }
+    const now = Date.now();
+    if (now - lastPush.current > 500) past.current.push(lastJson.current);
+    if (past.current.length > 100) past.current.shift();
+    future.current = [];
+    lastPush.current = now;
+    lastJson.current = json;
+    announce();
+  }, [json]);
+  const restore = useCallback(
+    (snapshot) => {
+      applying.current = true;
+      const g = hydrate(JSON.parse(snapshot));
+      setNodes(g.nodes);
+      setEdges(g.edges);
+      lastPush.current = 0;
+    },
+    [setNodes, setEdges]
+  );
+  const undo = useCallback(() => {
+    const prev = past.current.pop();
+    if (prev === undefined) return;
+    future.current.push(lastJson.current);
+    restore(prev);
+    announce();
+  }, [restore]);
+  const redo = useCallback(() => {
+    const next = future.current.pop();
+    if (next === undefined) return;
+    past.current.push(lastJson.current);
+    restore(next);
+    announce();
+  }, [restore]);
+  useEffect(() => {
+    const onUndo = () => undo();
+    const onRedo = () => redo();
+    const onKey = (e) => {
+      const t = e.target;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "z") {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "y") (e.preventDefault(), redo());
+        return;
+      }
+      e.preventDefault();
+      e.shiftKey ? redo() : undo();
+    };
+    window.addEventListener("valida:undo", onUndo);
+    window.addEventListener("valida:redo", onRedo);
+    window.addEventListener("keydown", onKey);
+    announce();
+    return () => {
+      window.removeEventListener("valida:undo", onUndo);
+      window.removeEventListener("valida:redo", onRedo);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [undo, redo]);
   const pending = useRef(null);
   const timer = useRef(null);
   useEffect(() => {
@@ -157,15 +235,7 @@ function Flow({ projectId, initial }) {
 
 // The node canvas of a project. Blocks come from the sidebar; changes are saved on the project.
 export default function Canvas({ projectId, graph }) {
-  const initial = useMemo(
-    () => ({
-      nodes: (Array.isArray(graph?.nodes) ? graph.nodes : [])
-        .filter((n) => nodeTypes[n.type])
-        .map((n) => (n.type === "broadcast" ? { ...n, type: "action", data: { action: "broadcast", values: { message: n.data?.message ?? "" } } } : n)),
-      edges: (Array.isArray(graph?.edges) ? graph.edges : []).map((e) => ({ ...e, ...arrow })),
-    }),
-    [graph]
-  );
+  const initial = useMemo(() => hydrate(graph), [graph]);
   return (
     <div className={styles.wrap}>
       <ReactFlowProvider>

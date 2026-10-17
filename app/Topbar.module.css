@@ -56,6 +56,13 @@
   background: var(--surface-hover);
 }
 
+.iconBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: transparent;
+  color: var(--muted);
+}
+
 /* short vertical rule, not touching the box edges */
 .divider {
   width: 1px;
