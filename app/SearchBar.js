@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BLOCKS, DRAG_TYPE, ADD_EVENT } from "./editor/blocks";
 import styles from "./SearchBar.module.css";
 
 const ic = { width: 15, height: 15, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
@@ -21,6 +22,13 @@ const SearchIcon = () => (
   </svg>
 );
 
+const TerminalIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="m4 17 6-6-6-6M12 19h8" />
+  </svg>
+);
+const BLOCK_ICONS = { command: TerminalIcon };
+
 const ChevronIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="m6 9 6 6 6-6" />
@@ -33,9 +41,10 @@ const CheckIcon = () => (
   </svg>
 );
 
-// Sidebar search + a kind filter dropdown; neither does anything yet.
+// Sidebar search, kind filter, and the list of blocks you can click or drag onto the canvas.
 export default function SearchBar() {
   const [filter, setFilter] = useState("All");
+  const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -58,7 +67,7 @@ export default function SearchBar() {
     <div className={styles.wrap} ref={ref}>
       <div className={styles.search} data-open={open || undefined}>
         <SearchIcon />
-        <input type="search" placeholder="Search" aria-label="Search" autoComplete="off" spellCheck={false} />
+        <input type="search" placeholder="Search" aria-label="Search" autoComplete="off" spellCheck={false} value={query} onChange={(e) => setQuery(e.target.value)} />
         {/* filter chip inside the field */}
         <button className={styles.chip} data-open={open || undefined} type="button" onClick={() => setOpen((v) => !v)} aria-haspopup="menu" aria-expanded={open} aria-label={`Filter: ${filter}`}>
           <Current />
@@ -86,6 +95,33 @@ export default function SearchBar() {
           ))}
         </div>
       )}
+
+      <ul className={styles.blocks} aria-label="Blocks">
+        {BLOCKS.filter((b) => (filter === "All" || b.kind === filter) && b.label.toLowerCase().includes(query.trim().toLowerCase())).map((b) => {
+          const Icon = BLOCK_ICONS[b.type];
+          return (
+            <li key={b.type}>
+              <button
+                className={styles.block}
+                type="button"
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData(DRAG_TYPE, b.type);
+                  e.dataTransfer.effectAllowed = "copy";
+                }}
+                onClick={() => window.dispatchEvent(new CustomEvent(ADD_EVENT, { detail: { type: b.type } }))}
+                title="Click or drag onto the canvas"
+              >
+                <span className={styles.blockIcon}>{Icon && <Icon />}</span>
+                <span className={styles.blockText}>
+                  <span className={styles.blockLabel}>{b.label}</span>
+                  <span className={styles.blockDesc}>{b.desc}</span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
