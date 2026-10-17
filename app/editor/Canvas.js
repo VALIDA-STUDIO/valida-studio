@@ -5,14 +5,14 @@ import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, 
 import "@xyflow/react/dist/style.css";
 import EventNode from "./EventNode";
 import BroadcastNode from "./BroadcastNode";
-import { DEFAULT_EVENT } from "./events";
-import { ADD_EVENT, DRAG_TYPE } from "./blocks";
+import ConditionNode from "./ConditionNode";
+import { ADD_EVENT, DRAG_TYPE, BLOCKS } from "./blocks";
 import { saveGraph } from "../projects/actions";
 import styles from "./editor.module.css";
 
-const nodeTypes = { event: EventNode, broadcast: BroadcastNode };
+const nodeTypes = { event: EventNode, broadcast: BroadcastNode, condition: ConditionNode };
 // kind of each node type, and the colour its connections get
-const KIND = { event: "event", broadcast: "action" };
+const KIND = { event: "event", broadcast: "action", condition: "condition" };
 const KIND_COLOR = { command: "var(--kind-command)", event: "var(--kind-event)", condition: "var(--kind-condition)", action: "var(--kind-action)" };
 const arrow = { animated: true, markerEnd: { type: MarkerType.ArrowClosed } };
 const deleteKeys = ["Backspace", "Delete"];
@@ -61,9 +61,11 @@ function Flow({ projectId, initial }) {
   const { screenToFlowPosition } = useReactFlow();
 
   const add = useCallback(
-    (type, position) => {
+    (blockId, position) => {
+      const block = BLOCKS.find((b) => b.id === blockId);
+      if (!block) return;
       const id = newId();
-      setNodes((ns) => ns.map((n) => ({ ...n, selected: false })).concat({ id, type, position, data: type === "event" ? { event: DEFAULT_EVENT } : {}, selected: true }));
+      setNodes((ns) => ns.map((n) => ({ ...n, selected: false })).concat({ id, type: block.node.type, position, data: structuredClone(block.node.data), selected: true }));
     },
     [setNodes]
   );
@@ -74,7 +76,7 @@ function Flow({ projectId, initial }) {
       const el = document.querySelector(`.${styles.flow}`);
       const r = el?.getBoundingClientRect();
       const base = screenToFlowPosition({ x: (r?.left ?? 0) + (r?.width ?? 800) / 2 - 120, y: (r?.top ?? 0) + (r?.height ?? 600) / 2 - 70 });
-      add(e.detail.type, { x: base.x + (nodes.length % 5) * 24, y: base.y + (nodes.length % 5) * 24 });
+      add(e.detail.id, { x: base.x + (nodes.length % 5) * 24, y: base.y + (nodes.length % 5) * 24 });
     };
     window.addEventListener(ADD_EVENT, onAdd);
     return () => window.removeEventListener(ADD_EVENT, onAdd);
@@ -104,11 +106,11 @@ function Flow({ projectId, initial }) {
     setOver(true);
   };
   const onDrop = (e) => {
-    const type = e.dataTransfer.getData(DRAG_TYPE);
+    const blockId = e.dataTransfer.getData(DRAG_TYPE);
     setOver(false);
-    if (!type) return;
+    if (!blockId) return;
     e.preventDefault();
-    add(type, screenToFlowPosition({ x: e.clientX - 120, y: e.clientY - 20 }));
+    add(blockId, screenToFlowPosition({ x: e.clientX - 120, y: e.clientY - 20 }));
   };
 
   return (

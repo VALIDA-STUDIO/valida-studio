@@ -1,8 +1,8 @@
 "use client";
 
 import { memo, useRef } from "react";
-import { Handle, Position, useReactFlow, useNodeConnections, useNodesData } from "@xyflow/react";
-import { EVENTS } from "./events";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { useVars } from "./useVars";
 import VarChips from "./VarChips";
 import styles from "./editor.module.css";
 
@@ -18,10 +18,8 @@ function BroadcastNode({ id, data, selected }) {
   const { updateNodeData } = useReactFlow();
   const field = useRef(null);
 
-  // variables offered by whatever event feeds this block
-  const incoming = useNodeConnections({ handleType: "target" });
-  const sources = useNodesData(incoming.map((c) => c.source));
-  const vars = sources.flatMap((n) => (n?.type === "event" ? (EVENTS[n.data?.event]?.outputs ?? []) : []));
+  // variables from the events upstream of this block
+  const vars = useVars(id);
 
   // put {path} where the cursor is
   const insert = (path) => {

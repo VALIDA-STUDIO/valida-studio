@@ -647,3 +647,50 @@
 .node[data-kind="command"] .nodeOutput[data-flow] .handle:hover {
   background: var(--kind-command);
 }
+
+/* ---------- condition fields ---------- */
+
+.condRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.condField {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 100px;
+  min-width: 0;
+}
+
+.condField[data-wide] {
+  flex-basis: 100%;
+}
+
+.condField .nodeInput {
+  height: 32px;
+}
+
+.condSelect {
+  height: 32px;
+  padding: 0 26px 0 9px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.condSelect:hover,
+.condSelect:focus {
+  border-color: var(--fg);
+}

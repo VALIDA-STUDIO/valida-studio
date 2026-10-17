@@ -33,7 +33,16 @@ const MegaphoneIcon = () => (
     <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
   </svg>
 );
+const BranchIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="6" cy="18" r="3" />
+    <circle cx="18" cy="6" r="3" />
+    <circle cx="6" cy="6" r="3" />
+    <path d="M6 9v6M18 9a9 9 0 0 1-9 9" />
+  </svg>
+);
 const BLOCK_ICONS = { event: BoltIcon, broadcast: MegaphoneIcon };
+const KIND_ICONS = { Conditions: BranchIcon };
 
 const PlusIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
@@ -122,19 +131,19 @@ export default function SearchBar() {
                 {shown
                   .filter((b) => b.kind === kind)
                   .map((b) => {
-                    const Icon = BLOCK_ICONS[b.type];
+                    const Icon = BLOCK_ICONS[b.id] ?? KIND_ICONS[b.kind];
                     return (
                       <button
-                        key={b.type}
+                        key={b.id}
                         className={styles.block}
                         role="listitem"
                         type="button"
                         draggable
                         onDragStart={(e) => {
-                          e.dataTransfer.setData(DRAG_TYPE, b.type);
+                          e.dataTransfer.setData(DRAG_TYPE, b.id);
                           e.dataTransfer.effectAllowed = "copy";
                         }}
-                        onClick={() => window.dispatchEvent(new CustomEvent(ADD_EVENT, { detail: { type: b.type } }))}
+                        onClick={() => window.dispatchEvent(new CustomEvent(ADD_EVENT, { detail: { id: b.id } }))}
                         title="Click or drag onto the canvas"
                       >
                         <span className={styles.blockIcon} data-kind={b.kind}>{Icon && <Icon />}</span>
