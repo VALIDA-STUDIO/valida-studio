@@ -5,6 +5,7 @@ import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { CONDITIONS } from "./conditions";
 import { useVars } from "./useVars";
 import VarChips from "./VarChips";
+import NodeSelect from "./NodeSelect";
 import styles from "./editor.module.css";
 
 const BranchIcon = () => (
@@ -55,13 +56,9 @@ function ConditionNode({ id, data, selected }) {
         <div className={styles.condRow}>
           {def.fields.map((f) =>
             f.select ? (
-              <select key={f.key} className={`${styles.condSelect} nodrag`} value={values[f.key] ?? f.select[0]} onChange={(e) => set(f.key, e.target.value)} aria-label="Comparison">
-                {f.select.map((o) => (
-                  <option key={o} value={o}>
-                    {o}
-                  </option>
-                ))}
-              </select>
+              <div key={f.key} className={styles.condSelectWrap}>
+                <NodeSelect value={values[f.key] ?? f.select[0]} options={f.select.map((o) => ({ id: o, label: o }))} onChange={(v) => set(f.key, v)} label="Comparison" compact />
+              </div>
             ) : (
               <label key={f.key} className={styles.condField} data-wide={f.vars || undefined}>
                 {f.label && <span className={styles.nodeLabel}>{f.label}</span>}
