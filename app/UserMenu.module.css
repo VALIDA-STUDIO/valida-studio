@@ -92,12 +92,6 @@
   color: var(--muted);
 }
 
-.plan[data-plan="pro"],
-.plan[data-plan="enterprise"] {
-  color: var(--fg);
-  border-color: var(--fg);
-}
-
 .name {
   min-width: 0;
   font-size: 14px;
