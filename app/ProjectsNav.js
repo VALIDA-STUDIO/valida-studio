@@ -1,13 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { setActiveProject } from "./projects/actions";
 import styles from "./ProjectsNav.module.css";
-
-// Example projects; the switcher only remembers which one is picked.
-const PROJECTS = [
-  { id: "p1", name: "Lobby Tools" },
-  { id: "p2", name: "Survival Core" },
-];
 
 const CubeIcon = ({ size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -28,11 +23,14 @@ const CheckIcon = () => (
   </svg>
 );
 
-export default function ProjectsNav() {
-  const [active, setActive] = useState(PROJECTS[0].id);
+// Sidebar chip for the active project; the dropdown switches between the user's projects.
+export default function ProjectsNav({ projects, activeId }) {
   const [open, setOpen] = useState(false);
+  const [pending, startTransition] = useTransition();
   const ref = useRef(null);
-  const current = PROJECTS.find((p) => p.id === active);
+  const active = activeId;
+  const current = projects.find((p) => p.id === activeId);
+  const setActive = (id) => id !== activeId && startTransition(() => setActiveProject(id));
 
   // close on outside click / Escape
   useEffect(() => {
@@ -47,8 +45,16 @@ export default function ProjectsNav() {
     };
   }, [open]);
 
+  if (!current) {
+    return (
+      <div className={styles.wrap}>
+        <div className={styles.empty}>No project yet. Use “New project” in the top bar.</div>
+      </div>
+    );
+  }
+
   return (
-    <div className={styles.wrap} ref={ref}>
+    <div className={styles.wrap} ref={ref} data-pending={pending || undefined}>
       <button className={styles.trigger} data-open={open || undefined} type="button" onClick={() => setOpen((v) => !v)} aria-haspopup="menu" aria-expanded={open}>
         <span className={styles.mark}>
           <CubeIcon />
@@ -64,7 +70,7 @@ export default function ProjectsNav() {
 
       {open && (
         <div className={styles.menu} role="menu">
-          {PROJECTS.map((p) => (
+          {projects.map((p) => (
             <button
               key={p.id}
               className={styles.item}

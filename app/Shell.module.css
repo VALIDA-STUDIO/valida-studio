@@ -85,9 +85,15 @@
   scrollbar-color: var(--border-strong) transparent;
 }
 
-.content {
+.main {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
 }
 
 @media (max-width: 600px) {

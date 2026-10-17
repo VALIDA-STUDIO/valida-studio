@@ -1,6 +1,20 @@
 .wrap {
   position: relative;
   margin-top: 14px;
+  transition: opacity 0.12s;
+}
+
+.wrap[data-pending] {
+  opacity: 0.7;
+}
+
+.empty {
+  padding: 10px 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
 }
 
 /* chip, same shape as the profile chip at the bottom */
