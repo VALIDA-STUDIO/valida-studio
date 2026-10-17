@@ -26,19 +26,19 @@
 /* dark: either the system prefers it (and the user didn't force light), or the user forced dark */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #000000;
+    --bg: #0a0a0a;
     --fg: #fafafa;
-    --sidebar-bg: #000000;
-    --surface: #000000;
-    --surface-hover: #141414;
+    --sidebar-bg: #0a0a0a;
+    --surface: #0a0a0a;
+    --surface-hover: #1a1a1a;
     --border: #2a2a2a;
     --border-strong: #3d3d3d;
     --tag-bg: #1f1f1f;
     --chip-bg: transparent;
-    --chip-hover: #141414;
+    --chip-hover: #1a1a1a;
     --chip-border: #2a2a2a;
-    --card-bg: #0a0a0a;
-    --card-foot: #000000;
+    --card-bg: #111111;
+    --card-foot: #0a0a0a;
     --muted: #a1a1a1;
     --sheen: rgba(0, 0, 0, 0.18);
     color-scheme: dark;
@@ -46,19 +46,19 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #000000;
+  --bg: #0a0a0a;
   --fg: #fafafa;
-  --sidebar-bg: #000000;
-  --surface: #000000;
-  --surface-hover: #141414;
+  --sidebar-bg: #0a0a0a;
+  --surface: #0a0a0a;
+  --surface-hover: #1a1a1a;
   --border: #2a2a2a;
   --border-strong: #3d3d3d;
   --tag-bg: #1f1f1f;
   --chip-bg: transparent;
-  --chip-hover: #141414;
+  --chip-hover: #1a1a1a;
   --chip-border: #2a2a2a;
-  --card-bg: #0a0a0a;
-  --card-foot: #000000;
+  --card-bg: #111111;
+  --card-foot: #0a0a0a;
   --muted: #a1a1a1;
   --sheen: rgba(0, 0, 0, 0.18);
   color-scheme: dark;
