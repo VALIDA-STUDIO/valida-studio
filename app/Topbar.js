@@ -23,9 +23,11 @@ const RedoIcon = () => (
   </svg>
 );
 
-const DownloadIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M12 3v12M7 10l5 5 5-5M4 19h16" />
+const HammerIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="m15 12-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9" />
+    <path d="M17.64 15 22 10.64" />
+    <path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91" />
   </svg>
 );
 
@@ -65,17 +67,15 @@ export default function Topbar({ projects, activeId }) {
       </nav>
 
       {/* right side: history + export (not wired yet) */}
-      <div className={styles.actions}>
-        <div className={styles.history} role="group" aria-label="History">
-          <button className={styles.iconBtn} type="button" title="Undo (⌘Z)" aria-label="Undo">
-            <UndoIcon />
-          </button>
-          <button className={styles.iconBtn} type="button" title="Redo (⇧⌘Z)" aria-label="Redo">
-            <RedoIcon />
-          </button>
-        </div>
+      <div className={styles.actions} role="group" aria-label="Actions">
+        <button className={styles.iconBtn} type="button" title="Undo (⌘Z)" aria-label="Undo">
+          <UndoIcon />
+        </button>
+        <button className={styles.iconBtn} type="button" title="Redo (⇧⌘Z)" aria-label="Redo">
+          <RedoIcon />
+        </button>
         <button className={styles.export} type="button" title="Build the plugin and download it">
-          <DownloadIcon />
+          <HammerIcon />
           Export .jar
         </button>
       </div>
