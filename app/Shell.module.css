@@ -62,19 +62,15 @@
   white-space: nowrap;
 }
 
-/* small outlined tag next to the name */
+/* "Beta" as a small raised mark at the top-right of the wordmark */
 .beta {
-  display: inline-flex;
-  align-items: center;
-  height: 16px;
-  padding: 0 5px;
-  margin-left: -2px;
-  border-radius: 4px;
-  border: 1px solid var(--border-strong);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  align-self: flex-start;
+  margin: 15px 0 0 -6px;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
   color: var(--muted);
 }
 
