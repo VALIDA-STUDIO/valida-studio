@@ -39,7 +39,7 @@
 /* ---------- command node ---------- */
 
 .node {
-  width: 260px;
+  width: 280px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--card-bg);
@@ -232,7 +232,7 @@
   flex: 1;
   min-width: 0;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
