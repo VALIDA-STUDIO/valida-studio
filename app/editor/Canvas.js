@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ProjectVarsContext } from "./useVars";
 import { ReactFlow, ReactFlowProvider, Background, BackgroundVariant, Controls, MiniMap, Panel, MarkerType, ConnectionLineType, addEdge, useNodesState, useEdgesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import EventNode from "./EventNode";
@@ -235,13 +236,15 @@ function Flow({ projectId, initial }) {
 }
 
 // The node canvas of a project. Blocks come from the sidebar; changes are saved on the project.
-export default function Canvas({ projectId, graph }) {
+export default function Canvas({ projectId, graph, variables = [] }) {
   const initial = useMemo(() => hydrate(graph), [graph]);
   return (
     <div className={styles.wrap}>
-      <ReactFlowProvider>
-        <Flow projectId={projectId} initial={initial} />
-      </ReactFlowProvider>
+      <ProjectVarsContext.Provider value={variables}>
+        <ReactFlowProvider>
+          <Flow projectId={projectId} initial={initial} />
+        </ReactFlowProvider>
+      </ProjectVarsContext.Provider>
     </div>
   );
 }

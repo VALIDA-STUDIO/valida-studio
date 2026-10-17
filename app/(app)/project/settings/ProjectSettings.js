@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateProject, deleteProject } from "../../../projects/actions";
 import PluginConfig from "./PluginConfig";
+import Variables from "./Variables";
 import s from "../../settings/settings.module.css";
 import f from "../../../ProjectSwitcher.module.css";
 
@@ -77,6 +78,8 @@ export default function ProjectSettings({ project }) {
             </div>
           </form>
         </section>
+
+        <Variables project={project} />
 
         <PluginConfig project={project} />
 

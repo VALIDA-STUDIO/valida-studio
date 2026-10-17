@@ -4,9 +4,10 @@ import Canvas from "../editor/Canvas";
 
 // Home: the node canvas of the active project.
 async function Home() {
-  const { activeId } = await getProjects();
+  const { projects, activeId } = await getProjects();
   const graph = await getGraph(activeId);
-  return <Canvas key={activeId ?? "none"} projectId={activeId} graph={graph} />;
+  const variables = projects.find((p) => p.id === activeId)?.variables ?? [];
+  return <Canvas key={activeId ?? "none"} projectId={activeId} graph={graph} variables={variables} />;
 }
 
 export default function Page() {

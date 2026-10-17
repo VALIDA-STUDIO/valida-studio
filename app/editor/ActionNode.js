@@ -3,7 +3,7 @@
 import { memo, useRef } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { ACTIONS } from "./actions";
-import { useVars } from "./useVars";
+import { useVars, useProjectVars } from "./useVars";
 import VarChips from "./VarChips";
 import MessageField from "./MessageField";
 import NodeSelect from "./NodeSelect";
@@ -24,8 +24,10 @@ function ActionNode({ id, data, selected }) {
   const def = ACTIONS[data.action] ?? ACTIONS.broadcast;
   const values = data.values ?? {};
   const vars = useVars(id);
+  const projectVars = useProjectVars();
   const last = useRef(null);
   const Icon = ACTION_ICONS[def.icon];
+  const fields = def.fields.filter((f) => !f.when || Object.entries(f.when).every(([k, allowed]) => allowed.includes(values[k] ?? def.fields.find((x) => x.key === k)?.select?.[0])));
 
   const set = (key, v) => updateNodeData(id, { values: { ...values, [key]: v } });
   const insert = (path) => {
@@ -57,8 +59,17 @@ function ActionNode({ id, data, selected }) {
       </div>
       {(def.fields.length > 0 || def.note) && (
         <div className={styles.nodeBody}>
-          {def.fields.map((f, i) =>
-            f.toggle ? (
+          {fields.map((f, i) =>
+            f.variable ? (
+              <div key={f.key} className={styles.condField} data-wide="" style={i ? { marginTop: 10 } : undefined}>
+                <span className={styles.nodeLabel}>{f.label}</span>
+                {projectVars.length ? (
+                  <NodeSelect value={values[f.key] ?? ""} options={[{ id: "", label: "Choose a variable" }, ...projectVars.map((v) => ({ id: v.name, label: `${v.name}  ·  ${v.type}${v.perPlayer ? ", per player" : ""}` }))]} onChange={(v) => set(f.key, v)} label={f.label} />
+                ) : (
+                  <span className={styles.nodeText}>No variables yet. Add them in Project Settings.</span>
+                )}
+              </div>
+            ) : f.toggle ? (
               <label key={f.key} className={`${styles.nodeToggle} nodrag`}>
                 <input type="checkbox" checked={!!values[f.key]} onChange={(e) => set(f.key, e.target.checked)} />
                 <span className={styles.nodeToggleBox} aria-hidden="true" />
@@ -90,7 +101,7 @@ function ActionNode({ id, data, selected }) {
             </label>
             )
           )}
-          {vars.length > 0 && def.fields.some((f) => f.vars) && <VarChips vars={vars} onInsert={insert} />}
+          {vars.length > 0 && fields.some((f) => f.vars) && <VarChips vars={vars} onInsert={insert} />}
         </div>
       )}
       <div className={styles.nodeOutputs}>

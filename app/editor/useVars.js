@@ -1,5 +1,6 @@
 "use client";
 
+import { createContext, useContext, useMemo } from "react";
 import { useStore } from "@xyflow/react";
 import { EVENTS } from "./events";
 import { ACTIONS } from "./actions";
@@ -38,9 +39,16 @@ function collect(s, nodeId) {
 
 const sameVars = (a, b) => a.length === b.length && a.every((v, i) => v.id === b[i].id && v.type === b[i].type);
 
-// Variables available to a node.
+// Variables defined on the project (from Project Settings)
+export const ProjectVarsContext = createContext([]);
+export const useProjectVars = () => useContext(ProjectVarsContext);
+const TYPE = { number: "Number", text: "String", boolean: "Boolean" };
+
+// Variables available to a node: project variables plus what the flow above provides.
 export function useVars(nodeId) {
-  return useStore((s) => collect(s, nodeId).vars, sameVars);
+  const project = useProjectVars();
+  const flow = useStore((s) => collect(s, nodeId).vars, sameVars);
+  return useMemo(() => [...flow, ...project.map((v) => ({ id: `var.${v.name}`, label: v.name, type: TYPE[v.type] ?? "String" })).filter((v) => !flow.some((f) => f.id === v.id))], [flow, project]);
 }
 
 // The nearest event above a node, or null.

@@ -1,18 +1,15 @@
 // Actions: fields on the node, one "then" output. `paper` hints at the call behind it.
 export const ACTIONS = {
   set_variable: {
-    label: "Set variable",
-    desc: "Stores a value under a name, per player or for everyone",
+    label: "Change variable",
+    desc: "Sets, adds to or resets a project variable",
     icon: "variable",
     fields: [
-      { key: "name", label: "Name", placeholder: "kills", code: true },
-      { key: "scope", label: "Scope", select: ["per player", "global"] },
-      { key: "value", label: "Value", placeholder: "0", vars: true },
-      { key: "persist", label: "Keep after restart", toggle: true },
+      { key: "name", label: "Variable", variable: true },
+      { key: "op", label: "Do", select: ["set", "add", "subtract", "reset"] },
+      { key: "value", label: "Value", placeholder: "1", vars: true, when: { op: ["set", "add", "subtract"] } },
     ],
-    // the variable this block makes available to the blocks after it
-    provides: (v) => (v.name ? [{ id: `var.${v.name}`, label: v.name, type: "String" }] : []),
-    paper: "PersistentDataContainer / plugin storage",
+    paper: "VariableStore.set / add / reset",
   },
   random_number: {
     label: "Random number",
