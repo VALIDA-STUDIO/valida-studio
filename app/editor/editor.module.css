@@ -39,7 +39,7 @@
 /* ---------- command node ---------- */
 
 .node {
-  width: 240px;
+  width: 260px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--card-bg);
@@ -200,38 +200,105 @@
 }
 
 
-/* event picker inside the node */
-.nodeSelect {
+/* event picker inside the node: our own dropdown, mono class name */
+.picker {
+  position: relative;
+}
+
+.pickerTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   height: 32px;
-  padding: 0 28px 0 9px;
-  border-radius: 6px;
+  padding: 0 8px 0 10px;
+  border-radius: 7px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--fg);
   font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  outline: none;
+  text-align: left;
   cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 9px center;
-  transition: border-color 0.12s;
+  transition: border-color 0.12s, background 0.12s;
 }
 
-.nodeSelect:hover,
-.nodeSelect:focus {
-  border-color: var(--fg);
+.pickerTrigger:hover,
+.pickerTrigger[data-open] {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
 }
 
-/* the Paper event class under the picker */
-.nodeMono {
-  margin-top: 2px;
+.pickerValue {
+  flex: 1;
+  min-width: 0;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pickerChevron {
+  display: grid;
+  place-items: center;
   color: var(--muted);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.12s;
+}
+
+.pickerTrigger:hover .pickerChevron,
+.pickerTrigger[data-open] .pickerChevron {
+  color: var(--fg);
+}
+
+.pickerTrigger[data-open] .pickerChevron {
+  transform: rotate(180deg);
+}
+
+.pickerMenu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  padding: 4px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  z-index: 20;
+}
+
+.pickerItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 30px;
+  padding: 0 9px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.pickerItem:hover,
+.pickerItem[data-on] {
+  background: var(--surface-hover);
+}
+
+.pickerCheck {
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  color: var(--fg);
 }
 
 /* flow output is bolder; data outputs use a hollow handle */
