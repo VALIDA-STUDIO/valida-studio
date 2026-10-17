@@ -36,3 +36,212 @@
   overflow: hidden;
 }
 
+/* ---------- command node ---------- */
+
+.node {
+  width: 240px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--fg);
+  font-size: 13px;
+  transition: border-color 0.12s;
+}
+
+.node:hover {
+  border-color: var(--border-strong);
+}
+
+.node[data-selected] {
+  border-color: var(--fg);
+}
+
+.nodeHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.nodeBadge {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.nodeKind {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* block kinds: action = tag, condition = outlined */
+.nodeKind[data-kind] {
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 16px;
+  background: var(--tag-bg);
+}
+
+.nodeKind[data-kind="condition"] {
+  border: 1px solid var(--border-strong);
+  background: transparent;
+}
+
+.nodeName {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* icon box of a block (node head, panel head, picker) */
+.nodeIcon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  flex-shrink: 0;
+}
+
+.nodeIcon[data-kind="condition"] {
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+.nodeSummary {
+  font-size: 12.5px;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nodeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 12px 10px;
+}
+
+.nodeTitle {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.nodeText {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.nodeArgs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.nodeArg {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: var(--tag-bg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--fg);
+}
+
+.nodeArg[data-optional] {
+  color: var(--muted);
+}
+
+.nodeOutputs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 0 10px;
+}
+
+.nodeOutput {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 14px 0 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--muted);
+}
+
+/* handles: small rings on the row's right edge */
+.handle {
+  width: 10px;
+  height: 10px;
+  border-width: 1.5px;
+}
+
+.nodeOutput :global(.react-flow__handle) {
+  top: 50%;
+}
+
+
+/* name field inside the command node */
+.nodeInput {
+  width: 100%;
+  height: 30px;
+  padding: 0 8px 0 20px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.nodeInput:focus {
+  border-color: var(--fg);
+}
+
+.nodeInput::placeholder {
+  color: var(--border-strong);
+  font-weight: 500;
+}
+
+.nodeField {
+  position: relative;
+}
+
+.nodeSlash {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 14px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+/* drop hint while dragging a block over the canvas */
+.flow[data-over] {
+  --xy-background-pattern-color: var(--fg);
+}
